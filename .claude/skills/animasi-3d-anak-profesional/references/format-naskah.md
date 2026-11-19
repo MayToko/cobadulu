@@ -94,6 +94,8 @@ Satu objek boleh berisi beberapa kunci sekaligus (mis. bicara + gerak + ekspresi
 | `hadap` | `"wak"` / `"depan"` / `"belakang"` / `45` | berputar halus (0,45 dtk) |
 | `lihat` | `"sari"` / `"kamera"` / `"depan"` | paksa arah pandang; `durasi` opsional |
 | `pindah` | `[x, z]` | pindahkan tokoh seketika (tanpa animasi jalan) — untuk HOOK *flash-forward* dan kembali ke posisi awal di balik `transisi:"pudar"` |
+
+Tokoh yang baru muncul belakangan (mis. untuk REVEAL): taruh `pos` awalnya jauh di luar layar (mis. `[-40,-25]`), lalu di adegan kemunculannya tulis `pindah` ke titik masuk **sebelum** `jalan` pada detik `t` yang sama, misalnya `{t:0, siapa:"wak", pindah:[-4.4,-6.5]}, {t:0, siapa:"wak", jalan:[-1.4,-0.4]}`. Jangan sembunyikan tokoh di belakang rumah panggung, karena kakinya terlihat dari kolong.
 | `narasi` | `"Tapi hari ini..."` | suara narator (tanpa `siapa`): subtitle miring berlabel narator; boleh `audio` & `durasi` |
 | `teksLayar` | `"10 MENIT SEBELUMNYA..."` | teks besar di layar bagian atas (penanda waktu, efek suara "KUKURUYUUUK!"); `warna`, `durasi` (bawaan 2 dtk). Tanpa `siapa` |
 

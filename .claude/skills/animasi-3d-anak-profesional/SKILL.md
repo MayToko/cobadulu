@@ -83,7 +83,8 @@ ElevenLabs memakai kredit pengguna — konfirmasi dulu sebelum membuat banyak ba
 ```bash
 node <skill>/scripts/render.cjs episode.html --skala 0.5 --foto 1,4,8,12 --out foto-qc
 ```
-Buka foto-fotonya (Read tool) dan periksa: kepala tidak terpotong, tokoh tidak tertutup properti/ayam,
+Skrip otomatis mencetak `⚠ PERINGATAN QC` bila ada tokoh yang bicara tapi tidak terlihat kamera (mis. tokoh lupa
+di-`pindah`/`jalan` masuk); perbaiki semua peringatan itu. Lalu buka foto-fotonya (Read tool) dan periksa: kepala tidak terpotong, tokoh tidak tertutup properti/ayam,
 kamera tidak menembus rumah/pohon, tokoh menghadap lawan bicara, teks tidak menutupi wajah,
 tak ada layar hitam. Perbaiki `posisi`, `sudut`, `jenis` kamera, atau pindahkan properti (`props`).
 

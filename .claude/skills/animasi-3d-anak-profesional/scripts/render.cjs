@@ -76,6 +76,11 @@ function muatPlaywright() {
   const info = await page.evaluate(() => ({ durasi: __studio.durasi, fps: __studio.fps, ukuran: __studio.ukuran, judul: __studio.judul, linimasa: __studio.linimasa }));
   const fps = parseFloat(arg('fps', info.fps));
   console.log(`• "${info.judul}" — ${info.durasi.toFixed(2)} dtk, ${info.ukuran[0]}x${info.ukuran[1]}, ${fps} fps`);
+  const takTerlihat = await page.evaluate(() => __studio.cekTerlihat ? __studio.cekTerlihat() : []);
+  if (takTerlihat.length) {
+    console.log('  ⚠ PERINGATAN QC: tokoh bicara tapi TIDAK terlihat kamera:');
+    for (const x of takTerlihat) console.log(`    - ${x.siapa} di detik ${x.detik}: "${x.teks}"`);
+  } else console.log('  ✓ QC: semua tokoh yang bicara terlihat kamera');
 
   // ---- Mode foto QC ----
   if (fotoArg) {

@@ -1078,7 +1078,17 @@ window.__studio = {
   durasi: DURASI, fps: FPS, ukuran: [W, H], judul: N.judul || 'animasi',
   frame, ambil: (tipe = 'image/jpeg', q = .93) => out.toDataURL(tipe, q),
   linimasa: [...daftar, NARATOR].flatMap(k => k.bicara.map(b => ({ siapa: k.d.id, mulai: b.t0, selesai: b.t1, teks: b.teks, audio: b.audio || null }))).sort((a, b) => a.mulai - b.mulai),
-  adegan: adegan.map(a => ({ mulai: a.mulai, akhir: a.akhir, kamera: a.kamera }))
+  adegan: adegan.map(a => ({ mulai: a.mulai, akhir: a.akhir, kamera: a.kamera })),
+  // QC otomatis: tokoh yang sedang bicara harus terlihat kamera (kepala di dalam bingkai)
+  cekTerlihat: () => {
+    const hasil = [], cam = kamera.clone();
+    for (const k of daftar) for (const b of k.bicara) for (const t of [b.t0 + .05, (b.t0 + b.t1) / 2]) {
+      const c = kameraPada(t); cam.position.copy(c.pos); cam.fov = c.fov; cam.updateProjectionMatrix(); cam.lookAt(c.target); cam.updateMatrixWorld();
+      const v = kepalaDunia(k, t).project(cam);
+      if (v.z > 1 || Math.abs(v.x) > 1.02 || Math.abs(v.y) > 1.02) { hasil.push({ siapa: k.d.nama || k.d.id, detik: +t.toFixed(1), teks: b.teks }); break; }
+    }
+    return hasil;
+  }
 };
 
 /* ======================= PEMUTAR & PEREKAM ======================== */
