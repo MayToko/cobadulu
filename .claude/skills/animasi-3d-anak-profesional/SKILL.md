@@ -84,6 +84,7 @@ Kirim MP4 final + file `episode.html` (bisa dibuka di HP: tombol ⏺ Rekam mengh
 dari browser, tanpa audio; di HP lemah buka dengan akhiran `?skala=0.5` agar lancar). Sertakan ringkasan: judul, durasi, daftar tokoh, dan ide episode lanjutan.
 
 ## Kemampuan mesin (ringkas)
+- **Gaya tokoh**: `gayaTokoh:"bulat"` (kartun kepala bulat) atau `"balok"` (avatar blok ala game blok: kepala silinder, badan kotak, topi bertulisan nama). Contoh di template: **Akmal** (kulit kuning, baju biru, topi merah bertulisan "Akmal").
 - **Tokoh**: anak (kepala besar ±40% tinggi) & dewasa; kedip otomatis, napas, mata mengikuti lawan bicara, kepala menoleh ke pembicara, lip-sync dari teks (visem a/i/u/e/o/m), gestur saat bicara.
 - **Gerak**: `lambai sorak tunjuk angguk geleng lompat ketawa pikir kaget tepuk garuk sedih bicaraTangan pinggang menari` + `jalan` / `lari` ke titik, `hadap`, `lihat`.
 - **Ekspresi**: `senang netral sedih marah kaget malu bingung`.

@@ -46,43 +46,45 @@ window.NASKAH = {
   latar: { jenis: "kampung", waktu: "siang" },   // waktu: pagi | siang | sore
   // props: [...]  // kosongkan = tata letak kampung bawaan
 
+  gayaTokoh: "balok",     // "balok" = avatar blok (ala game blok) | "bulat" = kartun kepala bulat
+
   tokoh: [
-    { id:"raka", nama:"Raka", jenis:"anak", rambut:"jabrik", warnaRambut:"#2a1a12",
-      kulit:"#e3a77c", baju:"#ff8a1f", celana:"#2d5fa8", sepatu:"#ffffff", pos:[-1.4, 0.6], hadap:30 },
+    { id:"akmal", nama:"Akmal", jenis:"anak", kulit:"#f5cd30", baju:"#1e6fd9", celana:"#2f3b52", sepatu:"#2a2a2e",
+      topi:{ warna:"#e63946", teks:"Akmal", warnaTeks:"#ffffff" }, warnaNama:"#ffd23f", pos:[-1.4, 0.6], hadap:30 },
     { id:"sari", nama:"Sari", jenis:"anak", rambut:"tudung", tudung:"#ff7eb3", rok:"#ffd166",
-      kulit:"#f0c09a", baju:"#ffd166", sepatu:"#e0457b", pos:[1.4, 0.6], hadap:-30, warnaNama:"#ff8fc2" },
-    { id:"wak", nama:"Wak Salim", jenis:"dewasa", rambut:"peci", warnaRambut:"#9a9a9a", kumis:true, kacamata:true,
-      kulit:"#c98d63", baju:"#3e9d6b", celana:"#5a4636", sepatu:"#3b2a20", pos:[-6.5, -2.5], hadap:90 }
+      kulit:"#f5cd30", baju:"#ffd166", sepatu:"#e0457b", pos:[1.4, 0.6], hadap:-30, warnaNama:"#ff8fc2" },
+    { id:"wak", nama:"Wak Salim", jenis:"dewasa", rambut:"peci", warnaRambut:"#6b6b6b", kumis:true, kacamata:true,
+      kulit:"#f5cd30", baju:"#3e9d6b", celana:"#5a4636", sepatu:"#3b2a20", pos:[-6.5, -2.5], hadap:90 }
   ],
 
   adegan: [
-    { durasi:4.2, kamera:{ jenis:"lebar", fokus:["raka","sari"], gerak:"majuPelan" },
-      aksi:[ { t:1.6, siapa:"raka", gerak:"lompat" } ] },
+    { durasi:4.2, kamera:{ jenis:"lebar", fokus:["akmal","sari"], gerak:"majuPelan" },
+      aksi:[ { t:1.6, siapa:"akmal", gerak:"lompat" } ] },
 
-    { durasi:3.6, kamera:{ jenis:"sedang", fokus:"raka", sudut:-15, gerak:"majuPelan" },
-      aksi:[ { t:0.2, siapa:"raka", bicara:"Sari! Ayo main bola!", durasi:2.2, gerak:"lambai", ekspresi:"senang" } ] },
+    { durasi:3.6, kamera:{ jenis:"sedang", fokus:"akmal", sudut:-15, gerak:"majuPelan" },
+      aksi:[ { t:0.2, siapa:"akmal", bicara:"Sari! Ayo main bola!", durasi:2.2, gerak:"lambai", ekspresi:"senang" } ] },
 
     { durasi:3.4, kamera:{ jenis:"dekat", fokus:"sari", sudut:15 },
       aksi:[ { t:0.2, siapa:"sari", bicara:"Boleh! Tapi... bolanya mana?", durasi:2.6, gerak:"pikir", ekspresi:"bingung" } ] },
 
-    { durasi:3.6, kamera:{ jenis:"dua", fokus:["raka","sari"], gerak:"geserKanan" },
-      aksi:[ { t:0.3, siapa:"raka", bicara:"Eh... tadi ada di sini.", durasi:2.3, gerak:"garuk", ekspresi:"malu" },
+    { durasi:3.6, kamera:{ jenis:"dua", fokus:["akmal","sari"], gerak:"geserKanan" },
+      aksi:[ { t:0.3, siapa:"akmal", bicara:"Eh... tadi ada di sini.", durasi:2.3, gerak:"garuk", ekspresi:"malu" },
              { t:0.6, siapa:"sari", gerak:"pinggang", durasi:2.4 } ] },
 
-    { durasi:4.6, kamera:{ jenis:"lebar", fokus:["wak","raka","sari"], gerak:"mundurPelan" }, transisi:"pudar",
+    { durasi:4.6, kamera:{ jenis:"lebar", fokus:["wak","akmal","sari"], gerak:"mundurPelan" }, transisi:"pudar",
       aksi:[ { t:0.0, siapa:"wak", jalan:[-3.2, -0.6], durasi:2.4 },
-             { t:2.4, siapa:"wak", hadap:"raka" },
-             { t:0.4, siapa:"raka", hadap:"wak" }, { t:0.5, siapa:"sari", hadap:"wak" },
+             { t:2.4, siapa:"wak", hadap:"akmal" },
+             { t:0.4, siapa:"akmal", hadap:"wak" }, { t:0.5, siapa:"sari", hadap:"wak" },
              { t:2.5, siapa:"wak", bicara:"Itu, di bawah bangku!", durasi:2.0, gerak:"tunjuk" } ] },
 
     { durasi:3.2, kamera:{ jenis:"dekat", fokus:"wak", sudut:-25, gerak:"majuPelan" },
       aksi:[ { t:0.2, siapa:"wak", gerak:"ketawa", durasi:1.8, ekspresi:"senang" },
-             { t:2.4, siapa:"raka", hadap:"depan" }, { t:2.4, siapa:"sari", hadap:"depan" } ] },
+             { t:2.4, siapa:"akmal", hadap:"depan" }, { t:2.4, siapa:"sari", hadap:"depan" } ] },
 
-    { durasi:4.4, kamera:{ jenis:"rendah", fokus:["raka","sari"], gerak:"naik" },
-      aksi:[ { t:0.3, siapa:"raka", bicara:"Terima kasih, Wak!", durasi:1.8, gerak:"sorak", ekspresi:"senang" },
+    { durasi:4.4, kamera:{ jenis:"rendah", fokus:["akmal","sari"], gerak:"naik" },
+      aksi:[ { t:0.3, siapa:"akmal", bicara:"Terima kasih, Wak!", durasi:1.8, gerak:"sorak", ekspresi:"senang" },
              { t:0.4, siapa:"sari", gerak:"sorak" },
-             { t:2.4, siapa:"raka", gerak:"lompat" }, { t:2.5, siapa:"sari", gerak:"lompat" } ] }
+             { t:2.4, siapa:"akmal", gerak:"lompat" }, { t:2.5, siapa:"sari", gerak:"lompat" } ] }
   ]
 };
 </script>
@@ -477,8 +479,162 @@ function buatTokoh(d, indeks) {
     tinggiKepala, dewasa, seed: indeks * 1.913 + 0.37, jalur: [], kunciArah: [], kunciEkspresi: [], bicara: [], gerak: [], lihat: [] };
 }
 
+/* ===================== TOKOH GAYA BALOK (avatar blok) ===================== */
+// Kotak dengan sudut membulat (normal halus), untuk badan/lengan/kaki gaya avatar blok.
+function kotakBalok(w, h, d, r, seg = 16) {
+  const g = new THREE.BoxGeometry(w, h, d, seg, seg, seg), p = g.attributes.position, n = g.attributes.normal;
+  const hx = w / 2 - r, hy = h / 2 - r, hz = d / 2 - r, v = new V3(), c = new V3(), df = new V3();
+  const remap = (x, half, inner) => { const s = x / half, a = Math.abs(s); return Math.sign(s) * (a <= .5 ? a / .5 * inner : inner + (a - .5) / .5 * r); };
+  for (let i = 0; i < p.count; i++) {
+    v.set(remap(p.getX(i), w / 2, hx), remap(p.getY(i), h / 2, hy), remap(p.getZ(i), d / 2, hz));
+    c.set(clamp(v.x, -hx, hx), clamp(v.y, -hy, hy), clamp(v.z, -hz, hz)); df.copy(v).sub(c);
+    if (df.lengthSq() > 1e-12) { df.normalize(); v.copy(c).addScaledVector(df, r); n.setXYZ(i, df.x, df.y, df.z); }
+    p.setXYZ(i, v.x, v.y, v.z);
+  }
+  return g;
+}
+// Kepala silinder bersudut bulat (siluet khas avatar blok).
+function kepalaSilinder(r, h, c) {
+  const pts = [new THREE.Vector2(0, -h / 2)];
+  for (let i = 0; i <= 8; i++) { const a = -Math.PI / 2 + i / 8 * Math.PI / 2; pts.push(new THREE.Vector2(r - c + Math.cos(a) * c, -h / 2 + c + Math.sin(a) * c)); }
+  for (let i = 0; i <= 8; i++) { const a = i / 8 * Math.PI / 2; pts.push(new THREE.Vector2(r - c + Math.cos(a) * c, h / 2 - c + Math.sin(a) * c)); }
+  pts.push(new THREE.Vector2(0, h / 2));
+  return new THREE.LatheGeometry(pts, 56);
+}
+function teksurTeks(teks, warna = '#ffffff', garis = 'rgba(0,0,0,.35)') {
+  const cv = document.createElement('canvas'); cv.width = 512; cv.height = 192;
+  const c = cv.getContext('2d'); let fs = 132;
+  do { c.font = `900 ${fs}px "Arial Black","Segoe UI Black",Impact,"Helvetica Neue",sans-serif`; fs -= 6; } while (c.measureText(teks).width > 470 && fs > 40);
+  c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+  c.lineWidth = 10; c.strokeStyle = garis; c.strokeText(teks, 256, 100); c.fillStyle = warna; c.fillText(teks, 256, 100);
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+
+function buatTokohBalok(d, indeks) {
+  const dewasa = d.jenis === 'dewasa', u = dewasa ? 1.22 : 1;
+  const D = { kakiH: .42 * u * (dewasa ? 1.25 : 1), kakiW: .2 * u, torsoW: .44 * u, torsoH: .42 * u * (dewasa ? 1.2 : 1), torsoD: .22 * u, lenganW: .19 * u,
+    r: .17 * u, h: .32 * u };
+  D.lenganH = D.torsoH;
+  const P = { pinggulY: D.kakiH, torsoH: D.torsoH, kec: dewasa ? 1.25 : 1.0, lari: dewasa ? 3.2 : 2.6, langkah: dewasa ? .8 : .55 };
+  const R = D.r, H = D.h;
+  const kulit = M(d.kulit || '#f5cd30', .5), baju = M(d.baju || '#1e6fd9', .65), celana = M(d.celana || '#2f3b52', .7),
+    sepatu = M(d.sepatu || '#2a2a2e', .55), gelap = M('#1b1b1f', .45), rambutM = M(d.warnaRambut || '#2a1b14', .7);
+  const lenganPanjang = d.lenganPanjang ?? (d.rambut === 'tudung');
+  const root = new THREE.Group(), tubuh = new THREE.Group(), pinggul = new THREE.Group();
+  root.add(tubuh); tubuh.add(pinggul); pinggul.position.y = P.pinggulY; root.scale.setScalar(d.skala || 1);
+
+  // Badan
+  pinggul.add(mesh(kotakBalok(D.torsoW, D.torsoH, D.torsoD, .035), baju, { pos: [0, D.torsoH / 2, 0] }));
+  if (d.rok) pinggul.add(mesh(new THREE.CylinderGeometry(D.torsoW * .5, D.torsoW * .78, D.kakiH * .62, 4, 1), M(d.rok, .7), { pos: [0, -D.kakiH * .28, 0], rot: [0, Math.PI / 4, 0], scl: [1, 1, .62] }));
+  if (d.logoBaju) {
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(D.torsoW * .7, D.torsoW * .26), new THREE.MeshStandardMaterial({ map: teksurTeks(d.logoBaju, d.warnaLogo || '#ffffff'), transparent: true, roughness: .6 }));
+    pl.position.set(0, D.torsoH * .58, D.torsoD / 2 + .002); pinggul.add(pl);
+  }
+  // Kepala
+  const kepala = new THREE.Group(); kepala.position.y = D.torsoH; pinggul.add(kepala);
+  kepala.add(mesh(new THREE.CylinderGeometry(R * .42, R * .42, .03, 16), kulit, { pos: [0, .01, 0] }));
+  const kepalaM = mesh(kepalaSilinder(R, H, R * .32), kulit, { pos: [0, H / 2 + .02, 0] }); kepala.add(kepalaM);
+  const diWajah = (obj, x, y, dorong = 1) => {
+    const yaw = Math.asin(clamp(x / R, -.95, .95)), luar = new THREE.Group(), dir = new V3(Math.sin(yaw), 0, Math.cos(yaw));
+    luar.position.set(dir.x * R * dorong, y, dir.z * R * dorong); luar.quaternion.setFromUnitVectors(SUMBU_Z, dir);
+    luar.add(obj); kepalaM.add(luar); return obj;
+  };
+  // Mata oval hitam + kilau
+  const mata = [];
+  for (const s of [-1, 1]) {
+    const grup = new THREE.Group(), pupil = new THREE.Group();
+    grup.add(mesh(bola(R * .13, 20, 14), M(d.warnaMata || '#141414', .3), { scl: [.72, 1.3, .3], bayangan: false }));
+    pupil.add(mesh(bola(R * .035, 10, 8), M('#ffffff', .2, { emissive: new THREE.Color('#ffffff'), emissiveIntensity: .6 }), { pos: [R * .03, R * .07, R * .03], bayangan: false }));
+    grup.add(pupil); diWajah(grup, s * R * .34, H * .09, .985); mata.push({ grup, pupil });
+  }
+  const alis = [];
+  for (const s of [-1, 1]) {
+    const g = new THREE.Group(); g.add(mesh(new THREE.CapsuleGeometry(R * .03, R * .16, 4, 8), gelap, { rot: [0, 0, Math.PI / 2], bayangan: false }));
+    diWajah(g, s * R * .34, H * .3, 1.0); alis.push(g);
+  }
+  const pipiM = new THREE.MeshStandardMaterial({ color: '#ff8a7a', transparent: true, opacity: .2, roughness: .6, depthWrite: false });
+  const pipi = [];
+  for (const s of [-1, 1]) pipi.push(diWajah(mesh(bola(R * .1, 14, 10), pipiM, { scl: [1.1, .6, .25], bayangan: false }), s * R * .6, -H * .06, .99));
+  // Mulut: senyum lebar khas avatar blok
+  const mulutG = diWajah(new THREE.Group(), 0, -H * .2, .99);
+  const busur = 1.7, rS = R * .3;
+  const senyum = mesh(new THREE.TorusGeometry(rS, R * .03, 8, 28, busur), gelap, { rot: [0, 0, Math.PI * 1.5 - busur / 2], pos: [0, rS * .92, 0], scl: [1, 1, .4], bayangan: false });
+  const cemberut = mesh(new THREE.TorusGeometry(rS * .8, R * .028, 8, 24, busur * .9), gelap, { rot: [0, 0, Math.PI / 2 - busur * .45], pos: [0, -rS * .8 - R * .02, 0], scl: [1, 1, .4], bayangan: false });
+  const buka = new THREE.Group();
+  buka.add(mesh(bola(R * .14, 20, 14), M('#3a0d0d', .6), { scl: [1.35, 1, .3], bayangan: false }));
+  buka.add(mesh(bola(R * .08, 14, 10), M('#e0707a', .6), { pos: [0, -R * .06, R * .01], scl: [1.3, .6, .35], bayangan: false }));
+  mulutG.add(senyum, cemberut, buka);
+
+  // Penutup kepala
+  const gaya = d.rambut || (d.topi ? 'topi' : 'pendek');
+  const atasKepala = H / 2;
+  if (gaya === 'pendek' || gaya === 'kuncir') {
+    kepalaM.add(mesh(kotakBalok(R * 2.12, H * .3, R * 2.12, .04), rambutM, { pos: [0, atasKepala - H * .07, 0] }));
+    kepalaM.add(mesh(kotakBalok(R * 2.08, H * .72, R * .9, .04), rambutM, { pos: [0, H * .1, -R * .62] }));
+    kepalaM.add(mesh(kotakBalok(R * 1.5, H * .14, R * .5, .03), rambutM, { pos: [-R * .2, atasKepala - H * .2, R * .78], rot: [0, 0, .12] }));
+    if (gaya === 'kuncir') for (const s of [-1, 1]) {
+      kepalaM.add(mesh(kotakBalok(R * .55, R * .75, R * .55, .03), rambutM, { pos: [s * R * 1.25, H * .05, -R * .3] }));
+      kepalaM.add(mesh(kotakBalok(R * .3, R * .18, R * .3, .02), M(d.pita || '#ff5c8a', .5), { pos: [s * R * 1.12, H * .3, -R * .3] }));
+    }
+  } else if (gaya === 'tudung') {
+    const tm = M(d.tudung || '#f48fb1', .75, { side: THREE.DoubleSide });
+    kepalaM.add(mesh(new THREE.CylinderGeometry(R * 1.13, R * 1.13, H * 1.12, 40, 1, true, .9, Math.PI * 2 - 1.8), tm, { pos: [0, 0, 0] }));
+    kepalaM.add(mesh(new THREE.CylinderGeometry(R * 1.13, R * 1.13, H * .26, 40, 1, true, -.9, 1.8), tm, { pos: [0, H * .44, 0] }));
+    kepalaM.add(mesh(new THREE.CylinderGeometry(R * 1.13, R * 1.13, .03, 40), tm, { pos: [0, H * .57, 0] }));
+    kepala.add(mesh(new THREE.CylinderGeometry(R * 1.1, D.torsoW * .66, D.torsoH * .32, 40, 1, true), tm, { pos: [0, -D.torsoH * .05, 0], scl: [1, 1, .75] }));
+  } else if (gaya === 'peci') {
+    kepalaM.add(mesh(new THREE.CylinderGeometry(R * .95, R * .98, H * .36, 36), M(d.warnaPeci || '#1d1d22', .55), { pos: [0, atasKepala + H * .08, 0] }));
+  }
+  if (d.topi) {
+    const tp = typeof d.topi === 'object' ? d.topi : { warna: d.topi };
+    const tm = M(tp.warna || '#e63946', .6), rr = R * 1.1, tg = new THREE.Group(); tg.position.y = atasKepala - H * .1; kepalaM.add(tg);
+    const kubah = mesh(new THREE.SphereGeometry(rr, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), tm); kubah.scale.y = .82; tg.add(kubah);
+    tg.add(mesh(new THREE.CylinderGeometry(rr * 1.005, rr * 1.005, H * .07, 48, 1, true), tm, { pos: [0, H * .02, 0] }));
+    tg.add(mesh(bola(R * .1, 12, 8), tm, { pos: [0, rr * .82, 0] }));
+    tg.add(mesh(new THREE.CylinderGeometry(rr * .98, rr * .98, .024, 48, 1, false, -Math.PI / 2, Math.PI), tm, { pos: [0, -H * .01, rr * .5], rot: [.12, 0, 0] }));
+    if (tp.teks) {
+      const decal = new THREE.Mesh(new THREE.SphereGeometry(rr * 1.008, 48, 12, Math.PI / 2 - .68, 1.36, Math.PI * .22, Math.PI * .25),
+        new THREE.MeshStandardMaterial({ map: teksurTeks(tp.teks, tp.warnaTeks || '#ffffff'), transparent: true, roughness: .6, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }));
+      kubah.add(decal);
+    }
+  }
+  if (d.kumis) for (const s of [-1, 1]) diWajah(mesh(new THREE.CapsuleGeometry(R * .04, R * .16, 4, 8), M(d.warnaRambut || '#3a2a20', .7), { rot: [0, 0, Math.PI / 2 + s * .3], bayangan: false }), s * R * .14, -H * .1, 1.02);
+  if (d.kacamata) {
+    const km = M('#2a2a2a', .4);
+    for (const s of [-1, 1]) diWajah(mesh(new THREE.TorusGeometry(R * .2, R * .025, 8, 24), km, { bayangan: false }), s * R * .34, H * .09, 1.05);
+    diWajah(mesh(new THREE.BoxGeometry(R * .26, R * .03, R * .02), km, { bayangan: false }), 0, H * .11, 1.07);
+  }
+
+  // Lengan (bahu = poros di atas lengan)
+  const bahu = [];
+  for (const s of [-1, 1]) {
+    const b = new THREE.Group(), lw = D.lenganW, lh = D.lenganH;
+    b.position.set(s * (D.torsoW / 2 + lw / 2 + .006), D.torsoH - lw * .45, 0);
+    const lengan = lenganPanjang ? lh : lh * .38;
+    b.add(mesh(kotakBalok(lw, lengan, lw, .03), baju, { pos: [0, lw * .45 - lengan / 2, 0] }));
+    if (!lenganPanjang) b.add(mesh(kotakBalok(lw * .96, lh - lengan + .02, lw * .96, .03), kulit, { pos: [0, lw * .45 - lengan - (lh - lengan) / 2 + .01, 0] }));
+    else b.add(mesh(kotakBalok(lw * .8, lw * .5, lw * .8, .03), kulit, { pos: [0, lw * .45 - lh - lw * .15, 0] }));
+    pinggul.add(b); bahu.push(b);
+  }
+  // Kaki
+  const kaki = [];
+  for (const s of [-1, 1]) {
+    const k = new THREE.Group(); k.position.set(s * (D.kakiW / 2 + .003), 0, 0);
+    k.add(mesh(kotakBalok(D.kakiW, D.kakiH * .78, D.torsoD, .03), celana, { pos: [0, -D.kakiH * .39, 0] }));
+    k.add(mesh(kotakBalok(D.kakiW * 1.02, D.kakiH * .24, D.torsoD * 1.12, .03), sepatu, { pos: [0, -D.kakiH * .88, .012] }));
+    pinggul.add(k); kaki.push(k);
+  }
+  const tinggiKepala = (P.pinggulY + D.torsoH + .02 + H / 2) * (d.skala || 1);
+  return { d, P, R, root, tubuh, pinggul, kepala, mata, alis, pipi, pipiM, senyum, cemberut, buka, bahu, kaki,
+    tinggiKepala, dewasa, seed: indeks * 1.913 + 0.37, jalur: [], kunciArah: [], kunciEkspresi: [], bicara: [], gerak: [], lihat: [],
+    lenganRest: .05, pipiDasar: .18, faktorKamera: .62 };
+}
+
 const tokoh = {};
-N.tokoh.forEach((d, i) => { const k = buatTokoh(d, i); tokoh[d.id] = k; scene.add(k.root); });
+N.tokoh.forEach((d0, i) => {
+  const d = { gaya: N.gayaTokoh || 'bulat', ...d0 };
+  const k = d.gaya === 'balok' ? buatTokohBalok(d, i) : buatTokoh(d, i); tokoh[d.id] = k; scene.add(k.root);
+});
 const daftar = Object.values(tokoh);
 
 /* ============================ LINIMASA ============================= */
@@ -592,6 +748,8 @@ function kameraPada(t) {
     let sebar = 0; for (const p of kepala) for (const q of kepala) sebar = Math.max(sebar, p.distanceTo(q));
     jarak = Math.max(jarak, sebar * (VERT ? 1.65 : 1.2) + jarak * (jenis === 'lebar' ? .3 : .55));
   }
+  const fk = fokus.reduce((a, k) => a + (k.faktorKamera || 1), 0) / fokus.length;
+  jarak *= lerp(1, fk, { dekat: .75, sangatDekat: .85, sedang: .7, dua: .5, rendah: .5 }[jenis] || 0);
   if (VERT) jarak *= fokus.length > 1 ? 1.15 : 1.25;
   switch (c.gerak) {
     case 'majuPelan': jarak *= lerp(1.14, .9, u); break;
@@ -682,7 +840,7 @@ const GERAK = {
   ketawa(k, lt, d, e, x) { k.kepala.rotation.x -= .25 * e; k.tubuh.rotation.x -= .07 * e; k.tubuh.position.y += Math.abs(Math.sin(lt * 16)) * .02 * e;
     const [kn, kr] = k.bahu; kn.rotation.x = lerp(kn.rotation.x, -.7, e); kr.rotation.x = lerp(kr.rotation.x, -.7, e); kn.rotation.z = lerp(kn.rotation.z, .25, e); kr.rotation.z = lerp(kr.rotation.z, -.25, e);
     x.mulut = Math.max(x.mulut, (.75 + Math.sin(lt * 16) * .2) * e); x.senang = Math.max(x.senang, e); x.sipit = Math.max(x.sipit, e); },
-  pikir(k, lt, d, e, x) { const [kn] = k.bahu; kn.rotation.x = lerp(kn.rotation.x, -1.85, e); kn.rotation.z = lerp(kn.rotation.z, .5, e);
+  pikir(k, lt, d, e, x) { const [kn] = k.bahu, balok = k.d.gaya === 'balok'; kn.rotation.x = lerp(kn.rotation.x, balok ? -1.25 : -1.85, e); kn.rotation.z = lerp(kn.rotation.z, balok ? .35 : .5, e);
     k.kepala.rotation.z += .18 * e; k.kepala.rotation.x -= .08 * e; x.pupil = [lerp(x.pupil[0], .45, e), lerp(x.pupil[1], .6, e)]; },
   kaget(k, lt, d, e, x) { const u = clamp(lt / d); if (u < .3) k.tubuh.position.y += Math.sin(u / .3 * Math.PI) * .12;
     const [kn, kr] = k.bahu; kn.rotation.z = lerp(kn.rotation.z, -1.1, e); kr.rotation.z = lerp(kr.rotation.z, 1.1, e); kn.rotation.x = lerp(kn.rotation.x, -.4, e); kr.rotation.x = lerp(kr.rotation.x, -.4, e);
@@ -707,7 +865,8 @@ function poseTokoh(k, t) {
   tubuh.scale.set(1 - nafas * .006, 1 + nafas * .013, 1 - nafas * .006);
   tubuh.rotation.z = Math.sin(t * .9 + s) * .014;
   kepala.rotation.set(Math.sin(t * .55 + s) * .02, Math.sin(t * .37 + s * 2) * .04, Math.sin(t * .7 + s * 3) * .03);
-  bahu[0].rotation.set(Math.sin(t * 1.1 + s) * .03, 0, -.2); bahu[1].rotation.set(Math.sin(t * 1.1 + s + 1) * .03, 0, .2);
+  const rest = k.lenganRest ?? .2;
+  bahu[0].rotation.set(Math.sin(t * 1.1 + s) * .03, 0, -rest); bahu[1].rotation.set(Math.sin(t * 1.1 + s + 1) * .03, 0, rest);
   for (const kk of kaki) kk.rotation.set(0, 0, 0);
   const x = { mulut: 0, senang: 0, sipit: 0, mataBesar: 0, pupil: [0, 0] };
 
@@ -742,7 +901,7 @@ function poseTokoh(k, t) {
 
   // Ekspresi
   const ek = ekspresiPada(k, t), R = k.R;
-  let alisY = 0, alisMiring = 0, mataS = 1, modeMulut = 'senyum', senyumY = 1, merah = .4, asimetri = 0;
+  let alisY = 0, alisMiring = 0, mataS = 1, modeMulut = 'senyum', senyumY = 1, merah = k.pipiDasar ?? .4, asimetri = 0;
   switch (ek) {
     case 'senang': break;
     case 'netral': senyumY = .45; break;

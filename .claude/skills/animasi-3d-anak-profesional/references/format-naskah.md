@@ -19,6 +19,21 @@ window.NASKAH = {
 };
 ```
 
+## gayaTokoh (gaya tubuh semua tokoh)
+
+`gayaTokoh: "balok"` → avatar blok ala game blok: kepala silinder, badan/lengan/kaki kotak membulat,
+mata oval hitam, senyum lebar. `gayaTokoh: "bulat"` (bawaan) → kartun kepala bulat besar.
+Bisa ditimpa per tokoh dengan `gaya:"balok"` / `gaya:"bulat"`. Semua gerak, ekspresi, lip-sync, dan kamera
+berlaku untuk kedua gaya. Gaya balok: kulit klasik `#f5cd30` (kuning), jarak kamera otomatis disesuaikan
+karena kepalanya lebih kecil. Jangan pakai logo/nama merek game mana pun di tokoh.
+
+Kunci khusus gaya balok:
+| Kunci | Contoh | Keterangan |
+|---|---|---|
+| `topi` | `{ warna:"#e63946", teks:"Akmal", warnaTeks:"#ffffff" }` | topi pet dengan tulisan di depan (teks pendek ≤ 8 huruf paling terbaca). `topi:"#e63946"` = topi polos |
+| `logoBaju` / `warnaLogo` | `"A"`, `"#ffffff"` | tulisan di dada baju |
+| `rambut` | `pendek` `kuncir` `tudung` `peci` `tanpa` | rambut balok; bila ada `topi`, bawaan tanpa rambut |
+
 ## tokoh[]
 
 | Kunci | Nilai | Keterangan |
