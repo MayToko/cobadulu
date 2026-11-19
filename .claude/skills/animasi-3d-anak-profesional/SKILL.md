@@ -1,6 +1,6 @@
 ---
 name: animasi-3d-anak-profesional
-description: Membuat video animasi kartun 3D anak-anak berkualitas serial TV (genre kartun keluarga bernuansa kampung Melayu/Indonesia, sejenis Upin & Ipin) dengan tokoh dan cerita ORISINAL — dari ide, naskah, desain tokoh, storyboard, animasi 3D (Three.js), dialog + lip-sync, sampai render MP4 1080p 16:9 atau 9:16 lengkap dengan suara dan musik. Pakai saat pengguna minta "animasi 3D", "kartun 3D anak", "video animasi seperti Upin Ipin", "episode kartun kampung", "film animasi pendek 3D", atau memanggil /animasi-3d-anak-profesional.
+description: Membuat video animasi kartun 3D anak-anak berkualitas serial TV (genre kartun keluarga bernuansa kampung Melayu/Indonesia, sejenis Upin & Ipin) dengan tokoh utama tetap AKMAL bergaya avatar blok ala Roblox (kulit kuning, baju biru, topi merah bertulisan "Akmal") dan cerita ORISINAL berstruktur HOOK-PROMISE-CONTEXT-BUILD-UP-CHAOS-REVEAL — dari ide, naskah, desain tokoh, storyboard, animasi 3D (Three.js), dialog + lip-sync, sampai render MP4 1080p 16:9 atau 9:16 lengkap dengan suara dan musik. Pakai saat pengguna minta "animasi 3D", "kartun 3D anak", "video animasi seperti Upin Ipin", "episode kartun kampung", "film animasi pendek 3D", atau memanggil /animasi-3d-anak-profesional.
 ---
 
 # Animasi 3D Anak Profesional
@@ -52,10 +52,19 @@ Kalimat pendek (≤ 8 kata), satu ide per baris, ada reaksi tokoh lain. Tampilka
 dalam bentuk tabel singkat (Bagian | Shot | Tokoh | Dialog/Aksi) sebelum membangun, kecuali pengguna minta langsung jadi.
 Alat mesin untuk struktur ini: `pindah` (flash-forward), `narasi`, `teksLayar`, `waktuJudul`, `transisi:"pudar"`.
 
-### 3. Desain tokoh orisinal
-Tentukan untuk tiap tokoh: nama, umur, sifat, warna baju khas (kontras antar tokoh!), gaya rambut
-(`pendek`/`jabrik`/`kuncir`/`tudung`/`peci`), aksesori (`kacamata`, `kumis`). Warna baju tiap tokoh
-harus mudah dibedakan dari jauh — itu kunci keterbacaan kartun anak.
+### 3. Tokoh — WAJIB gaya avatar blok (Roblox) dengan AKMAL sebagai tokoh utama
+Semua episode memakai `gayaTokoh: "balok"` (bawaan mesin) dan **Akmal selalu tokoh utama**, persis seperti ini
+(salin apa adanya, jangan ubah warna/topi kecuali pengguna meminta):
+```js
+{ id:"akmal", nama:"Akmal", jenis:"anak", kulit:"#f5cd30", baju:"#1e6fd9", celana:"#2f3b52", sepatu:"#2a2a2e",
+  topi:{ warna:"#e63946", teks:"Akmal", warnaTeks:"#ffffff" }, warnaNama:"#ffd23f", pos:[-1.4, 0.6], hadap:30 }
+```
+Akmal: kulit **kuning**, baju **biru**, topi **merah** bertulisan **"Akmal"** warna **putih**.
+Tokoh pendukung juga bergaya blok (kulit kuning `#f5cd30`), dengan warna baju kontras dari biru Akmal —
+pilih dari daftar pemeran di `references/gaya-visual.md` (Sari, Wak Salim, dll.) atau buat baru dengan
+`rambut` `pendek`/`kuncir`/`tudung`/`peci`, `kacamata`, `kumis`, `topi`, `logoBaju`.
+Gaya kartun kepala bulat (`gayaTokoh:"bulat"`) hanya dipakai bila pengguna memintanya secara jelas.
+Jangan pakai logo atau nama merek Roblox di layar; yang dipakai hanya gaya bentuk avatar blok.
 
 ### 4. Storyboard → NASKAH
 Salin template ke folder kerja (mis. `episode-<judul>/episode.html`), lalu isi `window.NASKAH`

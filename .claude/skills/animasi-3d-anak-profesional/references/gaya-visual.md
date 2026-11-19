@@ -20,20 +20,26 @@ tokoh (umur, hubungan, sifat, warna, rambut) sampai jelas berbeda.
 2. **Satu warna khas per tokoh** (baju) yang tidak bertabrakan:
    oranye `#ff8a1f`, merah muda `#ff7eb3`, kuning `#ffd166`, biru `#3a86ff`, hijau `#3e9d6b`,
    ungu `#9b5de5`, merah `#e63946`, toska `#2ec4b6`. Celana/rok gelap atau netral agar baju menonjol.
-3. **Kulit** bervariasi realistis Asia Tenggara: `#f0c09a`, `#e3a77c`, `#d4956b`, `#c98d63`, `#a8714c`.
-4. **Sifat dalam satu kalimat** (mis. "Raka: berani tapi pelupa"; "Sari: teliti dan suka bertanya")
-   dan ekspresi/gerak favorit yang konsisten (Raka sering `garuk`, Sari sering `pikir`/`pinggang`).
+3. **Kulit**: gaya blok (bawaan) memakai kuning klasik `#f5cd30` untuk semua tokoh. Hanya untuk gaya bulat: `#f0c09a`, `#e3a77c`, `#d4956b`, `#c98d63`, `#a8714c`.
+4. **Sifat dalam satu kalimat** (mis. "Akmal: merasa paling berani, padahal gampang kaget"; "Sari: teliti dan suka bertanya")
+   dan ekspresi/gerak favorit yang konsisten (Akmal sering `garuk`/`kaget`, Sari sering `pikir`/`pinggang`).
 5. **Tokoh dewasa** sebagai pemberi solusi/hikmah: `peci` + `kumis`/`kacamata` (kakek/paman), `tudung` dewasa (ibu/guru).
 
-Contoh pemeran orisinal siap pakai:
-| id | Nama | Jenis | Rambut | Baju | Sifat |
-|---|---|---|---|---|---|
-| raka | Raka | anak | jabrik | oranye | berani, pelupa, lucu |
-| sari | Sari | anak | tudung merah muda | kuning (rok) | pintar, teliti |
-| bimo | Bimo | anak, skala 1.1 | pendek | biru | penakut tapi baik hati |
-| lala | Lala | anak, skala .88 | kuncir | ungu | adik kecil yang polos |
-| wak | Wak Salim | dewasa | peci, kumis, kacamata | hijau | bijak, suka bercanda |
-| bu_ani | Bu Ani | dewasa | tudung toska | toska | guru yang sabar |
+## Pemeran tetap — gaya avatar blok (Roblox), BAWAAN semua episode
+Semua tokoh memakai `gayaTokoh:"balok"` dan kulit kuning klasik `#f5cd30`. **Akmal selalu tokoh utama.**
+
+| id | Nama | Jenis | Penampilan (kunci NASKAH) | Sifat |
+|---|---|---|---|---|
+| akmal | **Akmal** (UTAMA) | anak | baju biru `#1e6fd9`, celana `#2f3b52`, sepatu `#2a2a2e`, `topi:{warna:"#e63946", teks:"Akmal", warnaTeks:"#ffffff"}` | berani (katanya), penasaran, lucu |
+| sari | Sari | anak | `rambut:"tudung"`, tudung `#ff7eb3`, baju & rok `#ffd166`, sepatu `#e0457b` | pintar, teliti, suka menggoda Akmal |
+| wak | Wak Salim | dewasa | `rambut:"peci"`, `kumis`, `kacamata`, baju `#3e9d6b`, celana `#5a4636` | bijak, suka bercanda |
+| bimo | Bimo | anak, skala 1.1 | `rambut:"pendek"`, baju `#ff8a1f` | penakut tapi baik hati |
+| lala | Lala | anak, skala .88 | `rambut:"kuncir"`, pita `#ff5c8a`, baju `#9b5de5`, rok `#ffffff` | adik kecil yang polos |
+| bu_ani | Bu Ani | dewasa | `rambut:"tudung"`, tudung & baju `#2ec4b6` | guru yang sabar |
+
+Ciri gaya blok: kepala silinder bersudut bulat, badan/lengan/kaki kotak, mata oval hitam dengan kilau,
+senyum lebar. Tulisan nama di topi sebaiknya ≤ 8 huruf. Tanpa logo/nama merek Roblox.
+(Gaya kartun kepala bulat `gayaTokoh:"bulat"` tetap tersedia, hanya bila pengguna meminta.)
 
 ## Pencahayaan & warna (sudah diatur mesin)
 - **Siang**: matahari putih hangat dari kanan-atas, langit biru jernih — bawaan untuk cerita ceria.

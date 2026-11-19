@@ -47,7 +47,7 @@ window.NASKAH = {
   namaNarator: "Narator",
   latar: { jenis: "kampung", waktu: "siang" },   // waktu: pagi | siang | sore
   // props: [...]  // kosongkan = tata letak kampung bawaan
-  gayaTokoh: "balok",     // "balok" = avatar blok (ala game blok) | "bulat" = kartun kepala bulat
+  gayaTokoh: "balok",     // BAWAAN: "balok" = avatar blok ala Roblox (Akmal) | "bulat" = kartun kepala bulat (hanya bila diminta)
 
   tokoh: [
     { id:"akmal", nama:"Akmal", jenis:"anak", kulit:"#f5cd30", baju:"#1e6fd9", celana:"#2f3b52", sepatu:"#2a2a2e",
@@ -55,7 +55,7 @@ window.NASKAH = {
     { id:"sari", nama:"Sari", jenis:"anak", rambut:"tudung", tudung:"#ff7eb3", rok:"#ffd166",
       kulit:"#f5cd30", baju:"#ffd166", sepatu:"#e0457b", pos:[1.4, 0.6], hadap:-30, warnaNama:"#ff8fc2" },
     { id:"wak", nama:"Wak Salim", jenis:"dewasa", rambut:"peci", warnaRambut:"#6b6b6b", kumis:true, kacamata:true,
-      kulit:"#f5cd30", baju:"#3e9d6b", celana:"#5a4636", sepatu:"#3b2a20", pos:[-1.0, -12.0], hadap:0 }
+      kulit:"#f5cd30", baju:"#3e9d6b", celana:"#5a4636", sepatu:"#3b2a20", pos:[-40, -25], hadap:0 }   // disembunyikan jauh; muncul saat REVEAL
   ],
 
   // Struktur: HOOK → PROMISE → CONTEXT → BUILD-UP → CHAOS → REVEAL (lihat references/cerita-dan-naskah.md)
@@ -672,7 +672,7 @@ function buatTokohBalok(d, indeks) {
 
 const tokoh = {};
 N.tokoh.forEach((d0, i) => {
-  const d = { gaya: N.gayaTokoh || 'bulat', ...d0 };
+  const d = { gaya: N.gayaTokoh || 'balok', ...d0 };
   const k = d.gaya === 'balok' ? buatTokohBalok(d, i) : buatTokoh(d, i); tokoh[d.id] = k; scene.add(k.root);
 });
 const daftar = Object.values(tokoh);
@@ -732,7 +732,7 @@ for (const e of peristiwa) {   // lintasan dulu (dibutuhkan untuk arah)
   const k = tokoh[e.siapa]; if (!k) continue;
   const ke = e.jalan || e.lari || e.pindah; if (!ke) continue;
   const dari = posisiPada(k, e.t), dist = Math.hypot(ke[0] - dari.x, ke[1] - dari.z);
-  if (e.pindah) { k.jalur.push({ t0: e.t, t1: e.t + 1e-4, dari, ke: { x: ke[0], z: ke[1] }, lari: false, dist: 0 }); continue; }
+  if (e.pindah) { k.jalur.push({ t0: e.t, t1: e.t, dari, ke: { x: ke[0], z: ke[1] }, lari: false, dist: 0, pindah: true }); continue; }
   const dur = e.durasi || Math.max(.4, dist / (e.lari ? k.P.lari : k.P.kec));
   k.jalur.push({ t0: e.t, t1: e.t + dur, dari, ke: { x: ke[0], z: ke[1] }, lari: !!e.lari, dist });
   k.kunciArah.push({ t: e.t, yaw: Math.atan2(ke[0] - dari.x, ke[1] - dari.z), blend: .3 });
@@ -918,7 +918,7 @@ function poseTokoh(k, t) {
   const x = { mulut: 0, senang: 0, sipit: 0, mataBesar: 0, pupil: [0, 0] };
 
   // Jalan / lari
-  for (const j of k.jalur) if (t >= j.t0 && t <= j.t1) {
+  for (const j of k.jalur) if (!j.pindah && t >= j.t0 && t <= j.t1) {
     const amp = Math.min(smooth(j.t0, j.t0 + .22, t), 1 - smooth(j.t1 - .22, j.t1, t));
     const u = (t - j.t0) / (j.t1 - j.t0), fase = lerp(u, ease(u), .45) * j.dist / (k.P.langkah * (j.lari ? 1.5 : 1)) * Math.PI * 2;
     const ay = Math.sin(fase) * (j.lari ? .95 : .55) * amp;

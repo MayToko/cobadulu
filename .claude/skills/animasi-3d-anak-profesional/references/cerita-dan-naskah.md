@@ -53,7 +53,7 @@ Durasi 2–3 mnt: perpanjang BUILD-UP dan CHAOS dengan 2–3 eskalasi (tiap eska
 
 ## Gaya dialog
 - Kalimat ≤ 8 kata. Bahasa sehari-hari anak, sopan, hangat. Boleh logat lokal ringan (Wak, Kak, Dik, "Ayo!", "Eh…").
-- Pengulangan lucu khas tokoh **ciptaan sendiri** (mis. Raka selalu bilang "Tenang, tenang… aku ingat!" padahal lupa).
+- Pengulangan lucu khas tokoh **ciptaan sendiri** (mis. Akmal selalu bilang "Tenang, aku paling berani!" lalu langsung kaget).
 - Seimbangkan: setiap baris diikuti reaksi (gerak/ekspresi) tokoh lain.
 - Hindari: ejekan fisik, kekerasan, bahaya yang bisa ditiru (memanjat tinggi, main api), merek dagang.
 
