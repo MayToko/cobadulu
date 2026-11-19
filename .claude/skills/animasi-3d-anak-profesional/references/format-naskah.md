@@ -12,6 +12,8 @@ window.NASKAH = {
   fps: 25,                  // 24/25/30
   kartuJudul: true,         // judul tampil 0–3,3 dtk di atas shot pertama
   kartuAkhir: "TAMAT",      // teks akhir (false untuk mematikan)
+  waktuJudul: 5.6,          // detik munculnya kartu judul (setelah HOOK). 0 = di awal
+  namaNarator: "Narator",   // label subtitle narasi
   latar: { jenis:"kampung", waktu:"siang", radiusHalaman:7, warnaRumput:"#7bbd4c", warnaHalaman:"#e4c690", areaBayangan:15 },
   props: [ ... ],           // opsional; kosong = tata letak kampung bawaan
   tokoh: [ ... ],
@@ -91,6 +93,9 @@ Satu objek boleh berisi beberapa kunci sekaligus (mis. bicara + gerak + ekspresi
 | `durasiBicara` | `1.5` | bila `jalan` + `bicara` dalam satu aksi |
 | `hadap` | `"wak"` / `"depan"` / `"belakang"` / `45` | berputar halus (0,45 dtk) |
 | `lihat` | `"sari"` / `"kamera"` / `"depan"` | paksa arah pandang; `durasi` opsional |
+| `pindah` | `[x, z]` | pindahkan tokoh seketika (tanpa animasi jalan) — untuk HOOK *flash-forward* dan kembali ke posisi awal di balik `transisi:"pudar"` |
+| `narasi` | `"Tapi hari ini..."` | suara narator (tanpa `siapa`): subtitle miring berlabel narator; boleh `audio` & `durasi` |
+| `teksLayar` | `"10 MENIT SEBELUMNYA..."` | teks besar di layar bagian atas (penanda waktu, efek suara "KUKURUYUUUK!"); `warna`, `durasi` (bawaan 2 dtk). Tanpa `siapa` |
 
 ### Daftar gerak (durasi bawaan)
 `lambai` 1,6 · `sorak` 1,6 (dua tangan ke atas) · `tunjuk` 1,4 · `angguk` 1,0 · `geleng` 1,0 ·

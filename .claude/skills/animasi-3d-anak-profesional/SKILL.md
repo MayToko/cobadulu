@@ -39,10 +39,18 @@ Kumpulkan: **tema/pesan moral**, **durasi** (bawaan 45–60 dtk), **rasio** (16:
 **suara** (ElevenLabs / rekaman sendiri / teks saja). Kalau pengguna hanya bilang "buatkan", langsung
 usulkan 3 premis singkat (lihat `references/cerita-dan-naskah.md`) dan lanjut dengan yang terbaik.
 
-### 2. Cerita & naskah
-Tulis struktur 3 babak mini: **pembuka (kenalkan situasi) → masalah/kelucuan → penyelesaian + moral**.
+### 2. Cerita & naskah — STRUKTUR WAJIB 6 BAGIAN
+Setiap episode disusun dengan urutan ini (rincian, porsi durasi, dan teknik di `references/cerita-dan-naskah.md`):
+1. **HOOK**: kejadian paling gila, mengejutkan, atau paling menarik di awal (flash-forward dari CHAOS/REVEAL).
+2. **PROMISE**: alasan mengapa penonton harus mengetahui cerita ini (narasi/teks janji; kartu judul di sini).
+3. **CONTEXT**: perkenalkan situasi secara singkat.
+4. **BUILD-UP**: masalah mulai berkembang, dengan informasi baru dan perubahan situasi.
+5. **CHAOS**: situasi semakin kacau, lucu, menegangkan, atau berbahaya (tetap aman untuk anak).
+6. **REVEAL**: fakta atau kejadian yang mengubah pemahaman penonton.
+
 Kalimat pendek (≤ 8 kata), satu ide per baris, ada reaksi tokoh lain. Tampilkan naskah ke pengguna
-dalam bentuk tabel singkat (Adegan | Shot | Tokoh | Dialog/Aksi) sebelum membangun, kecuali pengguna minta langsung jadi.
+dalam bentuk tabel singkat (Bagian | Shot | Tokoh | Dialog/Aksi) sebelum membangun, kecuali pengguna minta langsung jadi.
+Alat mesin untuk struktur ini: `pindah` (flash-forward), `narasi`, `teksLayar`, `waktuJudul`, `transisi:"pudar"`.
 
 ### 3. Desain tokoh orisinal
 Tentukan untuk tiap tokoh: nama, umur, sifat, warna baju khas (kontras antar tokoh!), gaya rambut
@@ -90,7 +98,7 @@ dari browser, tanpa audio; di HP lemah buka dengan akhiran `?skala=0.5` agar lan
 - **Ekspresi**: `senang netral sedih marah kaget malu bingung`.
 - **Kamera**: `lebar sedang dua dekat sangatDekat rendah atas ots` × gerak `diam majuPelan mundurPelan geserKiri geserKanan orbit naik`, aturan 180° otomatis, transisi `pudar`.
 - **Latar**: kampung (rumah panggung, kelapa, pohon rindang, semak, bunga, batu, pagar, bangku, bola, ayam yang mematuk), waktu `pagi/siang/sore`, langit gradasi, awan, bukit, bayangan lembut, tone-mapping ACES.
-- **Overlay**: kartu judul, subtitle bernama-warna per tokoh, kartu akhir.
+- **Overlay**: kartu judul (bisa ditunda setelah HOOK), subtitle bernama-warna per tokoh, narasi narator, teks layar besar, kartu akhir.
 
 ## Batasan yang jujur disampaikan ke pengguna
 Mesin ini prosedural (tanpa model 3D rigging penuh): kualitasnya setara kartun 3D web yang rapi,
