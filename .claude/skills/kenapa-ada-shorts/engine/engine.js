@@ -257,7 +257,7 @@ function makeChar(id, spec) {
     drape.userData.mesh.material = toon(spec.collar2 || '#3b4fb0', { side: THREE.DoubleSide });
   } else if (hair === 'bob') { // rambut bob wanita (Bu Sari)
     const cap = mk(new THREE.SphereGeometry(HR * 1.08, 40, 24, 0, Math.PI * 2, 0, 1.75), hc, { out: 'l' }); cap.rotation.x = -0.35; cap.position.z = -0.02; head.add(cap);
-    const fr = mk(new THREE.SphereGeometry(HR * 1.075, 40, 16, Math.PI / 2 - 0.9, 1.8, 0, 1.05), hc, { out: false }); head.add(fr);
+    const fr = mk(new THREE.SphereGeometry(HR * 1.075, 40, 16, Math.PI / 2 - 0.9, 1.8, 0, 0.82), hc, { out: false }); head.add(fr);
   }
   if (spec.glasses) {
     for (const sx of [-1, 1]) { const g = mk(new THREE.TorusGeometry(0.07, 0.012, 8, 30), INK_CSS, { out: false, shadow: false }); g.position.set(sx * 0.065, 0.03, HR * 0.95); head.add(g); }
@@ -335,6 +335,18 @@ const P = {
     for (const [x, sgn] of [[0, 1], [0, -1]]) { const f = box(w, 0.015, 0.22, '#e8a540', { out: 0.008 }); f.position.set(0, h + 0.07, sgn * (d / 2 + 0.07)); f.rotation.x = sgn * 1.1; g.add(f); }
     for (let i = 0; i < 6; i++) { const u = P.umbrellaClosed(c); u.scale.setScalar(0.66); u.rotation.z = Math.PI / 2; u.position.set(0.4, 0.1 + (i % 2) * 0.08, -0.19 + i * 0.075); g.add(u); }
     return g; },
+  phone(c = '#222a38') { const g = new THREE.Group(); const b = box(0.09, 0.012, 0.17, c, { out: 0.006 }); g.add(b); const sc = box(0.075, 0.013, 0.15, '#6fc3e8', { out: 0 }); sc.position.y = 0.001; g.add(sc); return g; },
+  powerbank(c = '#2b2f3a') { const g = new THREE.Group(); const b = box(0.11, 0.035, 0.19, c, { out: 0.007 }); b.position.y = 0.018; g.add(b); for (let i = 0; i < 4; i++) { const l = box(0.012, 0.01, 0.012, i < 3 ? '#5fd35a' : '#555', { out: 0 }); l.position.set(-0.03 + i * 0.02, 0.037, 0.07); g.add(l); } return g; },
+  pbPile(n = 20, seed = 4) { const g = new THREE.Group(); const r = rnd(seed); const cs = ['#2b2f3a', '#c0392b', '#2e6f9e', '#e8e3d0', '#3f8f4f']; for (let i = 0; i < n; i++) { const p = P.powerbank(cs[i % cs.length]); p.position.set((i % 5 - 2) * 0.13 + (r() - 0.5) * 0.03, Math.floor(i / 5) * 0.04, (r() - 0.5) * 0.05); p.rotation.y = (r() - 0.5) * 0.3; g.add(p); } return g; },
+  cable(len = 0.8, c = '#f1ede2') { const g = new THREE.Group(); const k = cyl(0.008, 0.008, len, c, { out: 's' }); k.rotation.z = Math.PI / 2; g.add(k); return g; },
+  termos(c = '#c0392b') { const g = new THREE.Group(); const b = cyl(0.13, 0.13, 0.42, c); b.position.y = 0.21; g.add(b); const t = cyl(0.09, 0.11, 0.08, '#e8e3d0'); t.position.y = 0.46; g.add(t); const sp = cyl(0.02, 0.02, 0.1, '#e8e3d0', { out: 's' }); sp.rotation.z = Math.PI / 2; sp.position.set(0.15, 0.3, 0); g.add(sp); return g; },
+  socket() { const g = new THREE.Group(); const b = box(0.16, 0.22, 0.04, '#efe6d2', { out: 0.008 }); g.add(b); for (const sx of [-1, 1]) { const h = cyl(0.012, 0.012, 0.05, '#222', { out: false }); h.rotation.x = Math.PI / 2; h.position.set(sx * 0.03, 0.02, 0.01); g.add(h); } return g; },
+  lakban() { const b = box(0.3, 0.12, 0.01, '#c9a35a', { out: 0.006 }); b.rotation.z = 0.5; return b; },
+  gorengan() { const g = new THREE.Group(); const pl = cyl(0.16, 0.12, 0.03, '#e8e3d0'); g.add(pl); for (let i = 0; i < 3; i++) { const f = sph(0.06, '#d9922a', { out: 's' }); f.scale.set(1.4, 0.6, 1); f.position.set(-0.06 + i * 0.06, 0.04, (i % 2) * 0.03); g.add(f); } return g; },
+  envelope() { const g = new THREE.Group(); const b = box(0.28, 0.01, 0.16, '#f1e4c6', { out: 0.006 }); g.add(b); const f = box(0.2, 0.011, 0.06, '#d8c9a4', { out: 0.004 }); f.position.z = -0.04; g.add(f); return g; },
+  bill() { const t = canvasTex(256, 360, (x, w, h) => { x.fillStyle = '#f5efe0'; x.fillRect(0, 0, w, h); x.fillStyle = '#2e6f9e'; x.fillRect(0, 0, w, 50); x.fillStyle = '#fff'; x.font = '800 30px Poppins'; x.fillText('LISTRIK', 60, 36); x.fillStyle = '#9a9080'; for (let i = 0; i < 6; i++) x.fillRect(20, 80 + i * 30, 150 + (i % 3) * 25, 8); x.fillStyle = '#c0392b'; x.font = '800 40px Poppins'; x.fillText('Rp500.000', 22, 320); });
+    return box(0.26, 0.005, 0.36, '#fff', { mat: toon('#ffffff', { map: t }), out: 0.006 }); },
+  coffee() { const g = new THREE.Group(); const b = cyl(0.06, 0.05, 0.12, '#f1ede2'); b.position.y = 0.06; g.add(b); const c = cyl(0.055, 0.055, 0.01, '#4a2a14', { out: false }); c.position.y = 0.115; g.add(c); return g; },
   kresek() { const g = new THREE.Group(); const b = mk(new THREE.SphereGeometry(0.42, 32, 20, 0, Math.PI * 2, 0, 1.7), '#f1ede2', { out: 'm' }); b.userData.mesh.material = toon('#f1ede2', { side: THREE.DoubleSide }); b.scale.set(1, 0.95, 1); g.add(b);
     for (const sx of [-1, 1]) { const e = mk(new THREE.TorusGeometry(0.07, 0.018, 8, 20), '#f1ede2', { out: 's' }); e.position.set(sx * 0.2, 0.42, 0); e.rotation.z = -sx * 0.4; g.add(e); } return g; },
   helmet(c = '#2a4fa0') { const g = new THREE.Group(); const h = mk(new THREE.SphereGeometry(0.4, 32, 20, 0, Math.PI * 2, 0, 1.5), c, { out: 'm' }); g.add(h); const v = mk(new THREE.SphereGeometry(0.405, 32, 10, Math.PI / 2 - 0.8, 1.6, 0.9, 0.5), '#d9e6ee', { out: false }); g.add(v); return g; },
@@ -571,6 +583,7 @@ function applyActor(ch, a, lt, dur) {
   if (anim === 'jump') { rig.position.y = Math.max(0, Math.sin(Math.min(lt, 0.5) * Math.PI / 0.5)) * 0.3; }
   if (anim === 'tremble') { rig.position.x = Math.sin(lt * 60) * 0.008; }
   if (anim === 'lean') rig.rotation.x = 0.12;
+  if (anim === 'sit') { ch.legs.forEach(l => l.rotation.x = -1.45); ch.arms.forEach(a2 => a2.rotation.x = -0.5); }
   if (anim === 'turn') r.rotation.y = ((a.rot || 0) + ((a.rot2 ?? 0) - (a.rot || 0)) * ease.io(Math.min(1, lt / 0.5))) * Math.PI / 180;
   if (a.headTilt) ch.head.rotation.z = a.headTilt;
   if (a.headTurn) ch.head.rotation.y = a.headTurn;
