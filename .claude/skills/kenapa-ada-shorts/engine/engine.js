@@ -13,6 +13,7 @@ import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 // MODE: "3d" (default, PBR + wajah 3D + AO + DOF + teks/ikon/partikel 3D) atau "toon" (tampilan referensi lama)
 let STYLE3D = true, OUTLINE3D = 0;
@@ -435,7 +436,7 @@ const P = {
   termos(c = '#c0392b') { const g = new THREE.Group(); const b = cyl(0.13, 0.13, 0.42, c); b.position.y = 0.21; g.add(b); const t = cyl(0.09, 0.11, 0.08, '#e8e3d0'); t.position.y = 0.46; g.add(t); const sp = cyl(0.02, 0.02, 0.1, '#e8e3d0', { out: 's' }); sp.rotation.z = Math.PI / 2; sp.position.set(0.15, 0.3, 0); g.add(sp); return g; },
   socket() { const g = new THREE.Group(); const b = box(0.16, 0.22, 0.04, '#efe6d2', { out: 0.008 }); g.add(b); for (const sx of [-1, 1]) { const h = cyl(0.012, 0.012, 0.05, '#222', { out: false }); h.rotation.x = Math.PI / 2; h.position.set(sx * 0.03, 0.02, 0.01); g.add(h); } return g; },
   lakban() { const b = box(0.3, 0.12, 0.01, '#c9a35a', { out: 0.006 }); b.rotation.z = 0.5; return b; },
-  gorengan() { const g = new THREE.Group(); const pl = cyl(0.16, 0.12, 0.03, '#e8e3d0'); g.add(pl); for (let i = 0; i < 3; i++) { const f = sph(0.06, '#d9922a', { out: 's' }); f.scale.set(1.4, 0.6, 1); f.position.set(-0.06 + i * 0.06, 0.04, (i % 2) * 0.03); g.add(f); } return g; },
+  gorengan(c = '#d9922a') { const g = new THREE.Group(); const pl = cyl(0.16, 0.12, 0.03, '#e8e3d0'); g.add(pl); for (let i = 0; i < 3; i++) { const f = sph(0.06, c, { out: 's' }); f.scale.set(1.4, 0.6, 1); f.position.set(-0.06 + i * 0.06, 0.04, (i % 2) * 0.03); g.add(f); } return g; },
   envelope() { const g = new THREE.Group(); const b = box(0.28, 0.01, 0.16, '#f1e4c6', { out: 0.006 }); g.add(b); const f = box(0.2, 0.011, 0.06, '#d8c9a4', { out: 0.004 }); f.position.z = -0.04; g.add(f); return g; },
   bill() { const t = canvasTex(256, 360, (x, w, h) => { x.fillStyle = '#f5efe0'; x.fillRect(0, 0, w, h); x.fillStyle = '#2e6f9e'; x.fillRect(0, 0, w, 50); x.fillStyle = '#fff'; x.font = '800 30px Poppins'; x.fillText('LISTRIK', 60, 36); x.fillStyle = '#9a9080'; for (let i = 0; i < 6; i++) x.fillRect(20, 80 + i * 30, 150 + (i % 3) * 25, 8); x.fillStyle = '#c0392b'; x.font = '800 40px Poppins'; x.fillText('Rp500.000', 22, 320); });
     return box(0.26, 0.005, 0.36, '#fff', { mat: toon('#ffffff', { map: t }), out: 0.006 }); },
@@ -454,6 +455,79 @@ const P = {
   coinsGold(n = 30) { const g = new THREE.Group(); const r = rnd(9); for (let i = 0; i < n; i++) { const c = cyl(0.045, 0.045, 0.01, '#f2c230', { out: 's' }); c.position.set((r() - 0.5) * 0.55, r() * 0.08, (r() - 0.5) * 0.32); c.rotation.set((r() - 0.5) * 0.7, 0, (r() - 0.5) * 0.7); g.add(c); } return g; },
   jahe() { const g = new THREE.Group(); for (let i = 0; i < 3; i++) { const b = sph(0.05, '#c9a060', { out: 's' }); b.scale.set(1.5, 0.8, 0.9); b.position.set(i * 0.07, 0.03 + (i % 2) * 0.02, (i % 2) * 0.03); b.rotation.z = i * 0.6; g.add(b); } return g; },
   hood(c = '#3a2a4a') { const h = mk(new THREE.SphereGeometry(0.44, 40, 24, 0, Math.PI * 2, 0, 2.2), c, { out: 'l' }); h.userData.mesh.material = toon(c, { side: THREE.DoubleSide }); h.rotation.x = 0.55; return h; },
+  // --- tembok rumah yang bisa berganti warna (kusam / putih / pink)
+  paintWall(color = '#f4f1ea', kusam = false, w = 6.5, h = 3.2) { const g = new THREE.Group();
+    const t = canvasTex(1024, 512, (x, W2, H2) => { x.fillStyle = color; x.fillRect(0, 0, W2, H2); const r = rnd(kusam ? 17 : 5);
+      for (let i = 0; i < 2500; i++) { x.fillStyle = `rgba(0,0,0,${r() * (kusam ? 0.07 : 0.018)})`; x.fillRect(r() * W2, r() * H2, 4, 4); }
+      if (kusam) { for (let i = 0; i < 26; i++) { x.fillStyle = `rgba(${70 + r() * 40},${66 + r() * 30},${55 + r() * 25},${0.25 + r() * 0.35})`; x.beginPath(); x.ellipse(r() * W2, r() * H2, 20 + r() * 90, 10 + r() * 50, r() * 3, 0, 7); x.fill(); }
+        x.strokeStyle = 'rgba(60,50,40,0.6)'; x.lineWidth = 3; for (let i = 0; i < 14; i++) { x.beginPath(); let px = r() * W2, py = r() * H2; x.moveTo(px, py); for (let k = 0; k < 5; k++) { px += (r() - 0.5) * 60; py += r() * 40; x.lineTo(px, py); } x.stroke(); }
+        for (let i = 0; i < 40; i++) { x.fillStyle = 'rgba(40,30,20,0.35)'; x.fillRect(r() * W2, H2 - r() * 60, 3, 20 + r() * 40); } }
+      x.fillStyle = kusam ? '#6a6058' : '#8a7a6a'; x.fillRect(0, H2 * 0.9, W2, H2 * 0.1); });
+    const wall = box(w, h, 0.25, '#fff', { mat: toon('#ffffff', { map: t }) }); wall.position.y = h / 2; g.add(wall);
+    const door = box(0.95, 2.05, 0.06, '#7a4a24'); door.position.set(-w * 0.32, 1.03, 0.15); g.add(door);
+    const knob = sph(0.035, '#d9b04a', { out: false }); knob.position.set(-w * 0.32 + 0.35, 1.0, 0.2); g.add(knob);
+    const win = box(1.1, 0.9, 0.06, '#2a3040'); win.position.set(w * 0.3, 1.7, 0.15); g.add(win);
+    for (const [dx, dy, ww, hh] of [[0, 0.48, 1.22, 0.07], [0, -0.48, 1.22, 0.07], [-0.58, 0, 0.07, 1.0], [0.58, 0, 0.07, 1.0], [0, 0, 0.05, 0.9]]) { const f = box(ww, hh, 0.08, '#f1ede2'); f.position.set(w * 0.3 + dx, 1.7 + dy, 0.18); g.add(f); }
+    const eave = box(w + 0.6, 0.18, 0.9, '#8a3a24'); eave.position.set(0, h + 0.05, 0.25); eave.rotation.x = 0.12; g.add(eave);
+    const step = box(w, 0.12, 0.5, '#9a8a78'); step.position.set(0, 0.06, 0.35); g.add(step);
+    return g; },
+  paintStripe(c = '#f6f4ee', w = 0.9, h = 2.9) { const g = new THREE.Group(); const b = box(w, h, 0.02, c, { out: 0 }); b.position.y = h / 2; g.add(b); return g; },
+  roller(c = '#ffffff') { const g = new THREE.Group(); const h = cyl(0.018, 0.018, 0.75, '#3a3a44'); h.position.y = -0.35; g.add(h);
+    const grip = cyl(0.028, 0.028, 0.2, '#d0402f'); grip.position.y = -0.75; g.add(grip);
+    const arm = cyl(0.012, 0.012, 0.16, '#3a3a44'); arm.rotation.z = Math.PI / 2; arm.position.set(0.08, 0.02, 0); g.add(arm);
+    const r = cyl(0.05, 0.05, 0.24, c); r.rotation.z = Math.PI / 2; r.position.set(0.16, 0.02, 0); g.add(r); return g; },
+  paintCan(c = '#ffffff') { const g = new THREE.Group(); const b = cyl(0.16, 0.16, 0.26, '#c8ccd2'); b.position.y = 0.13; g.add(b);
+    const lab = cyl(0.162, 0.162, 0.12, c); lab.position.y = 0.13; g.add(lab); const top = cyl(0.15, 0.15, 0.012, c, { out: false }); top.position.y = 0.262; g.add(top); return g; },
+  ladder() { const g = new THREE.Group(); for (const sx of [-1, 1]) { const r = box(0.05, 2.4, 0.05, '#c9a04a'); r.position.set(sx * 0.22, 1.2, 0); g.add(r); }
+    for (let i = 0; i < 7; i++) { const st = box(0.44, 0.04, 0.05, '#c9a04a'); st.position.set(0, 0.25 + i * 0.32, 0); g.add(st); } g.rotation.x = -0.18; return g; },
+  // --- proyektor 3D bentuk GOBOOX HY320PRO+ (kotak hitam membulat, lensa besar, kisi-kisi, dudukan U yg bisa diputar)
+  projector() { const g = new THREE.Group(); const dark = STYLE3D ? new THREE.MeshStandardMaterial({ color: '#1c1d22', roughness: 0.45, metalness: 0.2 }) : toon('#1c1d22');
+    const body = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.26, 0.3, 4, 0.05), dark); body.castShadow = true; body.position.y = 0.36; g.add(body);
+    const grillT = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#1c1d22'; x.fillRect(0, 0, w, h); x.fillStyle = '#0c0c10'; for (let i = 0; i < 22; i++) x.fillRect(10, 8 + i * 11, w - 20, 5); });
+    const grill = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.22), STYLE3D ? new THREE.MeshStandardMaterial({ map: grillT, roughness: 0.6 }) : toon('#ffffff', { map: grillT })); grill.position.set(0, 0.36, 0.151); g.add(grill);
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.09, 0.06, 40), dark); ring.rotation.x = Math.PI / 2; ring.position.set(-0.02, 0.37, 0.17); g.add(ring);
+    const lens = new THREE.Mesh(new THREE.SphereGeometry(0.065, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshPhysicalMaterial({ color: '#203a8a', roughness: 0.05, metalness: 0.3, clearcoat: 1, emissive: '#3060ff', emissiveIntensity: 0.6 }));
+    lens.rotation.x = Math.PI / 2; lens.position.set(-0.02, 0.37, 0.195); g.add(lens);
+    const logoT = canvasTex(256, 64, (x, w, h) => { x.fillStyle = '#1c1d22'; x.fillRect(0, 0, w, h); x.fillStyle = '#e8e8ec'; x.font = '800 40px Poppins'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('GOBOOX', w / 2, h / 2); });
+    const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.05), new THREE.MeshBasicMaterial({ map: logoT })); logo.rotation.y = Math.PI / 2; logo.position.set(0.171, 0.43, 0.0); g.add(logo);
+    for (const sx of [-1, 1]) { const arm = new THREE.Mesh(new RoundedBoxGeometry(0.03, 0.3, 0.08, 2, 0.012), dark); arm.position.set(sx * 0.185, 0.22, 0); g.add(arm); const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.03, 24), dark); knob.rotation.z = Math.PI / 2; knob.position.set(sx * 0.2, 0.36, 0); g.add(knob); }
+    const base = new THREE.Mesh(new RoundedBoxGeometry(0.42, 0.04, 0.26, 3, 0.015), dark); base.position.y = 0.06; base.castShadow = true; g.add(base);
+    const glow = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.006, 8, 40), new THREE.MeshBasicMaterial({ color: '#4a8aff' })); glow.rotation.x = Math.PI / 2; glow.position.y = 0.04; glow.scale.set(1.25, 0.75, 1); g.add(glow);
+    return g; },
+  // --- sorot cahaya proyektor (kerucut tembus pandang) — dari origin ke arah -z sepanjang len
+  beam(len = 5, w = 3.2, h = 1.8) { const geo = new THREE.CylinderGeometry(0.01, 1, len, 4, 1, true); geo.rotateY(Math.PI / 4); geo.translate(0, -len / 2, 0); geo.rotateX(Math.PI / 2); geo.scale(w / 1.414, h / 1.414, 1);
+    const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: '#d8ecff', transparent: true, opacity: 0.09, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); const g = new THREE.Group(); g.add(m); return g; },
+  // --- layar pertandingan bola (tekstur kanvas beranimasi, memancarkan cahaya)
+  screen(w = 3.2, h = 1.8) { const g = new THREE.Group(); const c = document.createElement('canvas'); c.width = 640; c.height = 360; const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })); g.add(m);
+    const light = new THREE.PointLight('#cfe8ff', 0, 7, 1.2); light.position.set(0, 0, 1.2); g.add(light);
+    const pl = [[0.3, 0.4, '#d0302a'], [0.4, 0.6, '#d0302a'], [0.45, 0.3, '#d0302a'], [0.6, 0.5, '#2e6fd0'], [0.65, 0.35, '#2e6fd0'], [0.55, 0.7, '#2e6fd0'], [0.2, 0.5, '#f0c030']];
+    g.userData.update = (lt, T) => { const x = c.getContext('2d'); const W2 = c.width, H2 = c.height;
+      for (let i = 0; i < 8; i++) { x.fillStyle = i % 2 ? '#2f8a3a' : '#35963f'; x.fillRect(i * W2 / 8, 0, W2 / 8, H2); }
+      x.strokeStyle = 'rgba(255,255,255,0.85)'; x.lineWidth = 3; x.strokeRect(20, 20, W2 - 40, H2 - 40); x.beginPath(); x.moveTo(W2 / 2, 20); x.lineTo(W2 / 2, H2 - 20); x.stroke(); x.beginPath(); x.arc(W2 / 2, H2 / 2, 45, 0, 7); x.stroke();
+      x.strokeRect(20, H2 / 2 - 70, 70, 140); x.strokeRect(W2 - 90, H2 / 2 - 70, 70, 140);
+      const bx = W2 * (0.5 + 0.3 * Math.sin(T * 0.9)), by = H2 * (0.5 + 0.28 * Math.sin(T * 1.7 + 1));
+      pl.forEach(([px, py, col], i) => { const ax = W2 * px + Math.sin(T * 1.3 + i) * 30 + (bx - W2 * px) * 0.25, ay = H2 * py + Math.cos(T * 1.1 + i * 2) * 20 + (by - H2 * py) * 0.25;
+        x.fillStyle = col; x.beginPath(); x.arc(ax, ay, 9, 0, 7); x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 2; x.stroke(); });
+      x.fillStyle = '#fff'; x.beginPath(); x.arc(bx, by, 6, 0, 7); x.fill();
+      x.fillStyle = 'rgba(10,10,20,0.85)'; x.fillRect(24, 24, 150, 34); x.fillStyle = '#fff'; x.font = '800 22px Poppins'; x.fillText('IDN 1 - 0 JPN', 32, 48);
+      x.fillStyle = '#f4c430'; x.fillRect(180, 24, 60, 34); x.fillStyle = '#111'; x.fillText(String(67 + Math.floor(T / 10)) + "'", 188, 48);
+      tex.needsUpdate = true; light.intensity = 3.5; };
+    return g; },
+  plasticChair(c = '#d0302a') { const g = new THREE.Group(); const m = STYLE3D ? new THREE.MeshStandardMaterial({ color: c, roughness: 0.35 }) : toon(c);
+    const seat = new THREE.Mesh(new RoundedBoxGeometry(0.46, 0.05, 0.44, 2, 0.02), m); seat.position.y = 0.45; seat.castShadow = true; g.add(seat);
+    const back = new THREE.Mesh(new RoundedBoxGeometry(0.46, 0.42, 0.04, 2, 0.02), m); back.position.set(0, 0.68, -0.21); back.rotation.x = -0.12; g.add(back);
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const l = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.025, 0.45, 10), m); l.position.set(sx * 0.19, 0.22, sz * 0.18); g.add(l); } return g; },
+  tikar(w = 2.6, d = 1.8) { const t = canvasTex(256, 256, (x, W2, H2) => { for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { x.fillStyle = (i + j) % 2 ? '#d84a3a' : '#f1e4c6'; x.fillRect(i * 32, j * 32, 32, 32); } });
+    return box(w, 0.015, d, '#fff', { mat: toon('#ffffff', { map: t }) }); },
+  kopiCart() { const g = new THREE.Group(); const tb = box(1.3, 0.06, 0.6, '#a4632a'); tb.position.y = 0.85; g.add(tb);
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const l = box(0.05, 0.85, 0.05, '#6a3a18'); l.position.set(sx * 0.6, 0.42, sz * 0.26); g.add(l); }
+    const ter = P.termos('#2e6f9e'); ter.position.set(-0.45, 0.88, 0); g.add(ter);
+    for (let i = 0; i < 4; i++) { const c = P.coffee(); c.position.set(-0.15 + i * 0.13, 0.88, 0.12); g.add(c); }
+    const gor = P.gorengan(); gor.position.set(0.4, 0.89, -0.05); g.add(gor);
+    const sign = P.sign(['KOPI 5RB', 'GORENGAN 2RB'], { bg: '#f4c430', fg: '#7a1a10', w: 512, h: 256, font: '900 64px Poppins', gw: 1.2, gh: 0.55 }); sign.position.set(0, 1.45, -0.25); g.add(sign);
+    for (const sx of [-1, 1]) { const p = cyl(0.02, 0.02, 0.6, '#6a3a18', { out: 's' }); p.position.set(sx * 0.55, 1.15, -0.25); g.add(p); }
+    return g; },
   kresek() { const g = new THREE.Group(); const b = mk(new THREE.SphereGeometry(0.42, 32, 20, 0, Math.PI * 2, 0, 1.7), '#f1ede2', { out: 'm' }); b.userData.mesh.material = toon('#f1ede2', { side: THREE.DoubleSide }); b.scale.set(1, 0.95, 1); g.add(b);
     for (const sx of [-1, 1]) { const e = mk(new THREE.TorusGeometry(0.07, 0.018, 8, 20), '#f1ede2', { out: 's' }); e.position.set(sx * 0.2, 0.42, 0); e.rotation.z = -sx * 0.4; g.add(e); } return g; },
   helmet(c = '#2a4fa0') { const g = new THREE.Group(); const h = mk(new THREE.SphereGeometry(0.4, 32, 20, 0, Math.PI * 2, 0, 1.5), c, { out: 'm' }); g.add(h); const v = mk(new THREE.SphereGeometry(0.405, 32, 10, Math.PI / 2 - 0.8, 1.6, 0.9, 0.5), '#d9e6ee', { out: false }); g.add(v); return g; },
@@ -713,6 +787,21 @@ function buildDapur() { // dapur istana: dinding batu, tungku menyala, panci bes
   return g;
 }
 
+function buildTeras() { // halaman depan rumah kampung kota: paving, pagar, tiang lampu, pohon, rumah tetangga. Tembok rumah = prop paintWall (warnanya bisa berganti)
+  const g = new THREE.Group(); g.name = 'teras';
+  const pt = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#9a9086'; x.fillRect(0, 0, w, h); x.strokeStyle = 'rgba(50,40,30,0.45)'; x.lineWidth = 3; for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { x.strokeRect(i * 32 + (j % 2) * 16, j * 32, 32, 32); } }, { repeat: [10, 10] });
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), toon('#ffffff', { map: pt })); ground.rotation.x = -Math.PI / 2; ground.position.z = 4; ground.receiveShadow = true; g.add(ground);
+  for (const sx of [-1, 1]) { const nb = house(sx < 0 ? '#cfe0c0' : '#e6d3a8', '#8a3a24', 3.2, 3.2, 2.6); nb.position.set(sx * 5.4, 0, -3.6); g.add(nb); }
+  for (let i = -6; i <= 6; i++) { if (Math.abs(i) < 1) continue; const p = box(0.06, 0.9, 0.06, '#e8e3d0'); p.position.set(i * 0.5, 0.45, 3.8); g.add(p); }
+  for (const y of [0.3, 0.75]) { for (const sx of [-1, 1]) { const r = box(2.6, 0.05, 0.05, '#e8e3d0'); r.position.set(sx * 1.85, y, 3.8); g.add(r); } }
+  const pole = cyl(0.05, 0.06, 4.2, '#5a5a62'); pole.position.set(3.4, 2.1, 2.6); g.add(pole);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 12), new THREE.MeshBasicMaterial({ color: '#ffe2a0' })); lamp.position.set(3.1, 4.1, 2.6); g.add(lamp);
+  const t1 = P.tree(1.2); t1.position.set(-3.6, 0, 2.4); g.add(t1);
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#f0b07a', fog: false })); sky.position.set(0, 14, -14); sky.name = 'sky'; g.add(sky);
+  g.userData = { sun: [7, 8, 7], sunTarget: [0, 0, -1], sunI: 3.0, hemi: 1.0, amb: 0.55, lamp: 0, bg: '#f0b07a', lampPos: [3.1, 3.9, 2.4] };
+  return g;
+}
+
 // ---------------------------------------------------------------- overlay 2D (caption, callout, debu)
 const out = document.createElement('canvas'); out.width = OW; out.height = OH; document.body.appendChild(out);
 const ox = out.getContext('2d');
@@ -961,8 +1050,25 @@ function anchor3D(at, x, y, dDefault = 2.2) {   // posisi dunia: titik 3D, atau 
   return { pos: camera.position.clone().addScaledVector(dir, dDefault), d: dDefault };
 }
 const pxToWorld = (px, d) => px / OH * 2 * d * Math.tan(camera.fov * Math.PI / 360);
+function photoCard(name) {
+  const k = 'p|' + name; if (o3cache[k]) return o3cache[k];
+  const tex = IMG[name]; const ar = tex.image.width / tex.image.height; const g = new THREE.Group();
+  const front = new THREE.Mesh(new THREE.PlaneGeometry(ar, 1), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })); front.position.z = 0.021; g.add(front);
+  const frame = new THREE.Mesh(new RoundedBoxGeometry(ar + 0.06, 1.06, 0.04, 3, 0.02), new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.3 })); g.add(frame);
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(ar + 0.1, 1.1), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: 0.35 })); shadow.position.set(0.04, -0.05, -0.03); g.add(shadow);
+  g.userData.ar = ar; o3cache[k] = g; overlayScene.add(g); return g;
+}
+function drawPhotos(s, lt) {   // foto produk: kartu 3D melayang (mode 3d) atau gambar 2D (mode toon)
+  (s.photos || []).forEach((ph, i) => { const t = lt - (ph.t || 0); if (t < 0) return; const k = ease.o(Math.min(1, t / 0.35)); const pw = (ph.w || 760) * (0.6 + 0.4 * k);
+    if (STYLE3D) { const g = photoCard(ph.img); const { pos, d } = anchor3D(ph.at, ph.x ?? 540, ph.y ?? 820, 2.0);
+      const hW = pxToWorld(pw, d) / g.userData.ar; g.visible = true; g.position.copy(pos); g.quaternion.copy(camera.quaternion);
+      g.rotateY((1 - k) * 1.2 + Math.sin(t * 1.2 + i) * (ph.tilt ?? 0.12)); g.rotateX(Math.sin(t * 0.9) * 0.05); g.scale.setScalar(hW); }
+    else { const im = IMG[ph.img].image; const h = pw * im.height / im.width; ox.save(); ox.globalAlpha = k; ox.shadowColor = 'rgba(0,0,0,0.6)'; ox.shadowBlur = 30; ox.fillStyle = '#fff';
+      ox.fillRect((ph.x ?? 540) - pw / 2 - 10, (ph.y ?? 820) - h / 2 - 10, pw + 20, h + 20); ox.shadowBlur = 0; ox.drawImage(im, (ph.x ?? 540) - pw / 2, (ph.y ?? 820) - h / 2, pw, h); ox.restore(); } });
+}
 function draw3DOverlays(s, lt) {
   for (const k in o3cache) o3cache[k].visible = false;
+  drawPhotos(s, lt);
   (s.callouts || []).forEach((c, i) => { const t = lt - (c.t || 0); if (t < 0 && c.t !== -1) return; const tt = c.t === -1 ? 9 : t;
     const g = text3D(c.text, c.color || '#f4c430'); const { pos, d } = anchor3D(c.at, c.x, c.y);
     const k = Math.min(1, tt / 0.3); const pop = 1 + 0.18 * Math.sin(k * Math.PI); const sc = pxToWorld((c.size || 84) * 0.95, d) * (0.4 + 0.6 * ease.o(k)) * pop;
@@ -976,7 +1082,7 @@ function draw3DOverlays(s, lt) {
 }
 
 // ---------------------------------------------------------------- timeline
-let STORY = null; let curSet = null;
+let STORY = null; let curSet = null; let CUR_T = 0; const IMG = {};
 const ease = { io: (t) => 0.5 - 0.5 * Math.cos(Math.PI * t), o: (t) => 1 - Math.pow(1 - t, 3), i: (t) => t * t * t, l: (t) => t };
 const lerp3 = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
 
@@ -1031,16 +1137,19 @@ function applyProp(o, s, lt, dur) {
   let pos = s.pos || [0, 0, 0];
   if (s.to) { const k = Math.min(1, Math.max(0, (lt - (s.toStart || 0)) / (s.toDur || dur))); pos = lerp3(s.pos, s.to, ease[s.toEase || 'io'](k)); }
   o.position.set(...pos);
+  if (o.userData.update) o.userData.update(lt, CUR_T);
   o.rotation.set(...(s.rot || [0, 0, 0]).map(d => d * Math.PI / 180));
   if (s.spin) o.rotation.y += lt * s.spin;
+  if (s.osc) o.position.y += Math.sin(lt * (s.osc[1] || 6)) * s.osc[0];          // gerak naik-turun (mis. roller cat)
   const sc = s.scale ?? 1; if (s.grow) { const k = ease.o(Math.min(1, lt / s.grow)); o.scale.setScalar(sc * Math.max(0.001, k)); } else o.scale.setScalar(sc);
+  if (s.growY) o.scale.y *= Math.max(0.001, Math.min(1, (lt - (s.growStart || 0)) / s.growY));   // sapuan cat tumbuh ke atas
 }
 
 function shotAt(T) { let acc = 0, i = 0; for (const s of STORY.shots) { if (T < acc + s.dur) return [s, T - acc, i]; acc += s.dur; i++; } const l = STORY.shots[STORY.shots.length - 1]; return [l, l.dur, i - 1]; }
 function capAt(T) { for (const c of STORY.captions) if (T >= c.s && T < c.e) return c; return null; }
 
 window.renderAt = function (T) {
-  const [s, lt, si] = shotAt(T);
+  const [s, lt, si] = shotAt(T); CUR_T = T;
   useSet(s.set);
   // aktor
   for (const id in chars) { const a = s.actors?.[id]; if (!a) { chars[id].root.visible = false; continue; } applyActor(chars[id], a, lt, s.dur); }
@@ -1073,6 +1182,7 @@ window.renderAt = function (T) {
   }
   // komposit 2D
   ox.imageSmoothingQuality = 'high'; ox.drawImage(renderer.domElement, 0, 0, OW, OH);
+  if (!STYLE3D) drawPhotos(s, lt);
   if (!STYLE3D) {   // mode toon: efek 2D lama
     const rain = s.rain ?? (sets[s.set].userData.interior ? 0 : md.rain);   // hujan otomatis hanya di eksterior
     if (rain) drawRain(T, rain); else drawDust(T, s.dust ?? md.dust);
@@ -1093,10 +1203,11 @@ window.frameJPEG = () => out.toDataURL('image/jpeg', 0.93);
 window.loadStory = async function (story) {
   await document.fonts.load('700 78px Poppins'); await document.fonts.load('800 84px Poppins'); await document.fonts.load('900 80px Poppins');
   STYLE3D = (story.style || '3d') !== 'toon'; OUTLINE3D = story.outline ?? 0; STORY_OPTS = { ao: story.ao, dof: story.dof, scale: story.scale };
+  for (const [k, url] of Object.entries(story.images || {})) { const t = await new THREE.TextureLoader().loadAsync(url); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; IMG[k] = t; }
   if (STYLE3D) font3d = new FontLoader().parse(await (await fetch('/assets/poppins_800.typeface.json')).json());
   lights();
   if (STYLE3D) { setup3D(); makeParticles(); }
-  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.dapur = buildDapur(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
+  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.dapur = buildDapur(); sets.teras = buildTeras(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
   sets.bank.position.set(0, 0, 60); sets.street.position.set(60, 0, 0);
   for (const k in sets) scene.add(sets[k]);
   // offset world agar set terpisah: shot memakai koordinat lokal set → kita geser kamera/aktor via parent

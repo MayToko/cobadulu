@@ -6,10 +6,13 @@ const storyPath = path.resolve(args[0]), outPath = path.resolve(args[1]);
 const opt = (k, d) => { const i = args.indexOf('--' + k); return i >= 0 ? args[i + 1] : d; };
 const FPS = +opt('fps', 30);
 const ROOT = __dirname;
-const mime = { '.js': 'text/javascript', '.html': 'text/html', '.woff2': 'font/woff2', '.json': 'application/json' };
+const WORK = path.dirname(storyPath);
+const mime = { '.js': 'text/javascript', '.html': 'text/html', '.woff2': 'font/woff2', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
 const srv = http.createServer((q, r) => {
   let p = decodeURIComponent(q.url.split('?')[0]); if (p === '/') p = '/index.html';
-  const f = path.join(ROOT, p); if (!f.startsWith(ROOT) || !fs.existsSync(f)) { r.writeHead(404); return r.end(); }
+  // /work/... = folder story.json (untuk gambar/aset milik episode, mis. foto produk)
+  const base = p.startsWith('/work/') ? WORK : ROOT; if (p.startsWith('/work/')) p = p.slice(5);
+  const f = path.join(base, p); if (!f.startsWith(base) || !fs.existsSync(f)) { r.writeHead(404); return r.end(); }
   r.writeHead(200, { 'content-type': mime[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r);
 }).listen(0);
 (async () => {

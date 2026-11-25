@@ -46,6 +46,12 @@ Sejak versi ini semua video dirender sebagai **animasi 3D penuh**, bukan tampila
 Opsi di `build.py`: `S.opts.update(style="3d"|"toon", ao=True|False, dof=True|False, scale=0.82, outline=0|1)`; per shot: `"dof": 0.0018` (aperture; 0 = tajam semua), `cam.arc`.
 Tips 3D: close-up wajah (jarak 1–1.6 m) paling memamerkan volume; beri arah cahaya miring (bukan frontal); hindari dua shot dengan busur searah berturut-turut (engine sudah selang-seling).
 
+## Konten soft-selling / foto produk
+- Foto produk asli pengguna bisa masuk video: taruh file di folder kerja (sebelah `story.json`), lalu `S.opts.update(images={"produk": "/work/foto.jpg"})`.
+- Per shot: `"photos": [{"img": "produk", "x": 540, "y": 700, "w": 820, "t": 0.15, "tilt": 0.12}]` → kartu foto 3D melayang berbingkai (mode toon: gambar 2D). Tampilkan besar saat nama produk disebut, kecil di shot terakhir untuk pengingat merek.
+- Buat juga versi 3D produknya sebagai prop (contoh `P.projector()` dari foto GOBOOX HY320PRO+). Klaim fitur di narasi/callout HANYA yang tertulis di foto/brosur pengguna.
+- Prop pendukung: `paintWall(warna, kusam)`, `paintStripe` (+`growY` untuk sapuan cat), `roller` (+`osc` naik-turun), `paintCan`, `ladder`, `beam` (sorot proyektor), `screen` (layar bola beranimasi + cahaya), `plasticChair`, `tikar`, `kopiCart`; set `teras` (halaman depan rumah).
+
 ## Setup engine
 ```bash
 cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
