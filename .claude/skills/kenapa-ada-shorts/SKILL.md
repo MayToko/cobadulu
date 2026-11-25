@@ -1,6 +1,6 @@
 ---
 name: kenapa-ada-shorts
-description: Membuat YouTube Shorts/Reels/TikTok 9:16 (±95–110 dtk) bergaya kartun 3D toon "Kenapa Ada Orang/Pelanggan yang Cuma …?" — tokoh kepala bulat krem ber-outline tebal, tokoh misterius berponi menutupi mata, warung kayu bercahaya sore hangat, caption 1–2 kata Poppins putih/kuning, callout angka kuning, rumus hitungan pojok kanan atas, narasi santai cepat. Meniru persis 3 video referensi (koin kembalian, es teh tawar 5 jam, mancing lepas ikan) dari ide → naskah 13 beat → suara ElevenLabs → storyboard → render Three.js → grading → mix audio → MP4 1080×1920 30 fps. Pakai saat pengguna minta "video kenapa ada", "cerita pelanggan aneh", "shorts kartun warung", "video seperti referensi koin/es teh/mancing", atau /kenapa-ada-shorts.
+description: Membuat YouTube Shorts/Reels/TikTok 9:16 (±95–110 dtk) bergaya kartun 3D toon "Kenapa Ada Orang/Pelanggan yang Cuma …?" — tokoh kepala bulat krem ber-outline tebal, tokoh misterius berponi menutupi mata, warung kayu bercahaya sore hangat, caption 1–2 kata Poppins putih/kuning, callout angka kuning, rumus hitungan pojok kanan atas, narasi santai cepat, lokasi & suasana (pagi/siang/sore/malam/hujan + emosi) berganti mengikuti narasi agar tidak monoton. Meniru persis 3 video referensi (koin kembalian, es teh tawar 5 jam, mancing lepas ikan) dari ide → naskah 13 beat → suara ElevenLabs → storyboard → render Three.js → grading → mix audio → MP4 1080×1920 30 fps. Pakai saat pengguna minta "video kenapa ada", "cerita pelanggan aneh", "shorts kartun warung", "video seperti referensi koin/es teh/mancing", atau /kenapa-ada-shorts.
 ---
 
 # Kenapa-Ada Shorts
@@ -20,7 +20,10 @@ Skill ini adalah hasil bedah 3 video referensi. **Baca dulu**:
    - `creative_transcribe_audio` (`connect_from` = node speech) → dapat `words` (start/end per kata).
    - Unduh `content_url` audio → `vo_raw.mp3` dan `words_download_url` → `words.json` (host `elevenlabsusercontent.com` harus diizinkan di jaringan environment; jika diblokir, minta via `update_environment`).
    - Narasi v3 biasanya ±1.7 kata/dtk; referensi ±2.2 kata/dtk → pakai `TEMPO=1.25` (atempo, pitch tetap).
-4. **Storyboard** — salin `examples/payung/build.py`, ganti cast/props/shot. Satu `S.shot("frasa anchor", {...})` per frasa narasi (cut tepat saat frasa diucapkan). Target 55–65 shot / 100 dtk, tiap shot 1–2.5 dtk.
+4. **Storyboard** — pakai `examples/payung/build.py` sebagai contoh API (cast/props/shot), tapi susun lokasinya mengikuti aturan "Suasana & variasi latar" (contoh payung dibuat sebelum aturan ini dan masih memicu peringatan monoton). Satu `S.shot("frasa anchor", {...})` per frasa narasi (cut tepat saat frasa diucapkan). Target 55–65 shot / 100 dtk, tiap shot 1–2.5 dtk.
+   - **Rencanakan peta lokasi dulu** (lihat bagian "Suasana & variasi latar"): tiap beat naskah → lokasi + waktu + emosi. Minimal 4–6 lokasi per video, tidak ada lokasi > 45 % durasi.
+   - Suasana diisi otomatis dari narasi saat `S.build()` (kata pagi/siang/sore/malam/hujan + kata emosi). Timpa per shot dengan `"mood": "malam+tegang"` bila perlu.
+   - `S.build()` mencetak `LOKASI`, `SUASANA`, dan `PERINGATAN` monoton. Perbaiki semua peringatan sebelum preview.
 5. **Preview** — `engine/preview.sh story.json pv` → contact sheet `pv/sheet_*.jpg` (still tiap shot). WAJIB dilihat (Read) dan diperbaiki sebelum render penuh: kamera tembus kepala/dinding, wajah tertutup caption, karakter membelakangi kamera, prop hilang.
 6. **Render + audio + mux** — `TEMPO=1.25 engine/make_video.sh path/to/build.py workdir` → `workdir/FINAL.mp4`. Render ±0.5 dtk/frame (±25–30 menit untuk 105 dtk) → jalankan di background.
 7. **QC** — ambil frame acak + cek `ffmpeg -af ebur128` (target -14.5 LUFS, LRA ±2). Kirim file ke pengguna (SendUserFile) dan commit sumber (bukan MP4 besar kecuali diminta).
@@ -38,7 +41,8 @@ cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
   "cast":  { "pria": {"body":"#7a4a24","hair":"cover","bag":true}, "bu": {"body":"#3b3f9a","hair":"hijab"} },
   "props": { "rack": {"type":"umbrellaRack","args":[5]} },
   "shots": [{
-    "dur": 1.6, "set": "warung",                 // warung | street | bank | halte | istana | taman
+    "dur": 1.6, "set": "warung",                 // warung | rumah | street | pasar | kampung | halte | bank | istana | taman
+    "mood": "malam+tegang",                      // base: pagi|siang|sore|malam|hujan|mendung  + emosi: tegang|sedih|ceria|misteri|mewah|lega
     "cam": {"p":[x,y,z], "p2":[...], "t":[...], "t2":[...], "fov":36, "ease":"l"},  // push-in p→p2
     "actors": { "bu": {"pos":[x,0,z], "rot":0, "expr":"worried", "anim":"nod",
                         "to":[x,0,z], "exprAt":[[0.7,"shock"]], "armR":[-2.4,0.2], "give":true} },
@@ -63,6 +67,21 @@ cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
 - Prop baru: tambah fungsi di objek `P` (pakai `box/cyl/sph/mk` agar outline otomatis).
 - Ekspresi baru: tambah `case` di `drawFace` (kanvas 512², mata y≈250, mulut y≈345).
 
+## Suasana & variasi latar (WAJIB)
+
+Visual harus **mengikuti isi narasi**, bukan diam di satu tempat. Aturan:
+
+1. **Peta lokasi per beat.** Sebelum menulis shot, buat tabel: beat → lokasi utama + 1 lokasi selingan. Contoh payung: hook=gang (eksterior) → warung (interior) · aturan=close-up gantungan · hujan=gang basah · tukang ojek=emperan · investigasi=halte · twist=warung · hitungan=halte hujan + gang wide · tag=warung terang.
+2. **Lokasi mengikuti kata.** Kalau narasi menyebut tempat ("ke pasar", "di rumah", "halte", "taman", "kampung", "dapur", "istana"), shot itu HARUS di tempat itu. Kalau menyebut aktivitas di luar (jalan, pulang, ngikutin), pakai eksterior.
+3. **Maks 3 shot berturut-turut di set yang sama.** Selingi dengan: insert benda (close-up prop), reaksi tokoh lain, eksterior/establishing, atau lokasi kilas (mis. bayangan rumah tokoh misterius).
+4. **Satu lokasi maksimal 45 % durasi; minimal 4 lokasi** untuk video > 60 dtk.
+5. **Di set yang sama, ganti sudut.** Jangan dua shot berurutan dengan posisi kamera hampir sama (lint memperingatkan < 0.25 m). Variasikan: wide → medium → close-up wajah → insert benda → over-the-shoulder → low angle meja.
+6. **Waktu & cuaca mengikuti narasi** (otomatis): "pagi/subuh" → `pagi` (biru-krem lembut, kabut tipis) · "siang" → `siang` (terang, langit biru) · "sore" → `sore` (tampilan referensi, oranye hangat) · "malam/gelap" → `malam` (biru gelap + lampu kuning hangat) · "hujan/gerimis" → `hujan` (abu, kabut, hujan) · "mendung". Kata lompatan waktu (besoknya, lusanya, akhir bulan, seminggu kemudian, suatu…) mengembalikan jam ke default.
+7. **Emosi mengikuti narasi** (otomatis, per shot): kaget/diusir/racun → `tegang` (kontras, vignette berat) · nyerah/lemas/gagal/kosong → `sedih` (pucat, dingin) · ketawa/senyum/sehat/bonus → `ceria` (terang, jenuh) · ngintip/ngikutin/konon/rahasia → `misteri` (gelap kebiruan, kabut) · emas/juta/hadiah → `mewah` (keemasan + kilau) · ternyata/itulah → `lega`.
+8. **Gaya tetap referensi.** Suasana hanya menggeser cahaya & grading; outline, caption, debu, vignette, dan karakter tetap sama. `sore` = tampilan persis referensi, jadi dipakai sebagai default.
+
+Lokasi tersedia: `warung` (warung kayu), `rumah` (ruang tamu: sofa, TV, jendela gorden), `street` (gang pasar + bank), `pasar` (lorong kios buah + untaian lampu), `kampung` (jalan desa, rumah genteng, sawah, kelapa, gunung), `halte` (halte bis + jalan raya), `bank` (loket), `istana` (ruang tahta + meja makan), `taman` (taman istana/kota). Tambah lokasi baru bila cerita butuh (lihat Ekstensi).
+
 ## Checklist kecocokan dengan referensi
 - [ ] Caption Poppins Bold putih + kuning kata kunci, 1–2 kata, y≈1352, shadow lembut.
 - [ ] Setiap shot push-in pelan, hard cut di awal frasa, rata-rata < 2.5 dtk.
@@ -72,3 +91,5 @@ cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
 - [ ] Callout angka kuning + panah, rumus pojok kanan atas, hasil hijau.
 - [ ] Narasi ±2.2 kata/dtk, musik latar terus-menerus, -14.5 LUFS.
 - [ ] Ditutup "Oh iya, besoknya…" + punchline.
+- [ ] `S.build()` tanpa PERINGATAN: ≥4 lokasi, tak ada lokasi >45 %, tak ada >3 shot beruntun di set sama.
+- [ ] Suasana (waktu, cuaca, emosi) berubah mengikuti narasi; malam terlihat malam, hujan terlihat hujan.

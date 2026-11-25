@@ -112,6 +112,9 @@ Resep (post shader engine, urutan):
 ## 15. Color temperature
 - **Hangat ±3000–3500 K** (sore/golden hour) di semua interior; eksterior siang sedikit lebih netral tapi tetap digrading hangat. Tidak ada adegan bertemperatur dingin; hujan pun tetap hangat-redup.
 
+## 15b. Suasana per adegan (pembaruan)
+Referensi dominan sore-hangat, tetapi tiap video tetap berganti lokasi 4–6 kali (warung ↔ gang ↔ bank ↔ loket; kolam ↔ saung ↔ loket ↔ jalan) dan berganti waktu sesuai kata narasi ("Suatu sore", "Datangnya pagi", "Suatu siang"). Engine kini punya preset `pagi/siang/sore/malam/hujan/mendung` + modifier emosi `tegang/sedih/ceria/misteri/mewah/lega` yang dipilih otomatis dari narasi; `sore` identik dengan grading referensi.
+
 ## 16. Visual continuity
 - Karakter tidak pernah berubah desain antar shot; posisi baku per set (pemilik selalu di balik etalase, pelanggan di depan).
 - Prop kunci (kaleng koin, toples, gantungan payung) selalu di posisi sama → penonton paham perubahan (penuh → kosong).

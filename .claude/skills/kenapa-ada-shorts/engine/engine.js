@@ -406,7 +406,7 @@ function buildWarung() { // interior warung kayu (referensi 1 & 2)
   const wf = windowFrame(2.2, 1.6, 3, 2); wf.position.set(4.95, 2.4, 0.3); wf.rotation.y = -Math.PI / 2; g.add(wf);
   // etalase / meja kasir
   const counter = P.counter(2.4, 1.05, 0.95); counter.position.set(0, 0, 0); g.add(counter);
-  g.userData = { sun: [9, 6.5, 2.2], sunTarget: [-1, 0.6, -1], sunI: 3.0, hemi: 1.15, amb: 0.8, lamp: 0.0, bg: '#2a1206', counterTop: counter.userData.top };
+  g.userData = { interior: true, lampPos: [0.3, 3.0, -1.0], sun: [9, 6.5, 2.2], sunTarget: [-1, 0.6, -1], sunI: 3.0, hemi: 1.15, amb: 0.8, lamp: 0.0, bg: '#2a1206', counterTop: counter.userData.top };
   return g;
 }
 function buildStreet() { // gang pasar dengan deret warung & BANK di ujung (referensi 1)
@@ -431,7 +431,7 @@ function buildStreet() { // gang pasar dengan deret warung & BANK di ujung (refe
   const bank = box(7, 4.2, 0.6, '#ddd0ae', { mat: toon('#ffffff', { map: brickTex('#e2d6b6') }) }); bank.position.set(0, 2.1, -29); g.add(bank);
   const bs = P.sign(['BANK'], { bg: '#2c6fb0', fg: '#ffffff', w: 512, h: 128, font: '800 80px Poppins' }); bs.scale.set(1.6, 0.6, 1); bs.position.set(0, 3.4, -28.65); g.add(bs);
   const door = box(1.6, 1.0, 0.1, '#3a2418'); door.position.set(0, 2.0, -28.66); g.add(door);
-  const skyM = new THREE.MeshBasicMaterial({ color: '#9ec7dc' }); const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), skyM); sky.position.set(0, 10, -32); g.add(sky);
+  const skyM = new THREE.MeshBasicMaterial({ color: '#9ec7dc' }); const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), skyM); sky.position.set(0, 10, -32); sky.name = 'sky'; g.add(sky);
   g.userData = { sun: [6, 9, 4], sunTarget: [0, 0, -8], sunI: 3.2, hemi: 1.0, amb: 0.45, lamp: 0, bg: '#9ec7dc' };
   return g;
 }
@@ -445,7 +445,7 @@ function buildBank() { // loket bank (dinding bata krem, lubang loket gelap)
   const sill = box(2.0, 0.08, 0.5, '#6e3418'); sill.position.set(0, 1.2, -0.75); g.add(sill);
   const post = box(0.06, 2.4, 0.06, '#8a8a90'); post.position.set(-1.05, 1.2, -0.7); g.add(post);
   const wf = windowFrame(2.4, 1.8, 2, 2); wf.position.set(4.5, 2.5, 3); wf.rotation.y = -Math.PI / 3; g.add(wf);
-  g.userData = { sun: [7, 6, 6], sunTarget: [0, 1, -1], sunI: 3.0, hemi: 0.9, amb: 0.5, lamp: 0, bg: '#2a1206', sillTop: 1.24 };
+  g.userData = { interior: true, lampPos: [0, 3.2, 0.5], sun: [7, 6, 6], sunTarget: [0, 1, -1], sunI: 3.0, hemi: 0.9, amb: 0.5, lamp: 0, bg: '#2a1206', sillTop: 1.24 };
   return g;
 }
 
@@ -461,7 +461,7 @@ function buildHalte() { // halte bis di pinggir jalan saat hujan sore
   const bench = box(2.0, 0.08, 0.4, '#c9741f'); bench.position.set(-6.0, 0.6, 0); g.add(bench);
   const hs = P.sign(['HALTE'], { bg: '#2f7fbf', fg: '#ffffff', w: 512, h: 128, font: '800 80px Poppins', border: true }); hs.scale.set(0.9, 0.36, 1); hs.position.set(-5.2, 2.95, 0.6); g.add(hs);
   for (let i = 0; i < 4; i++) { const t = P.tree(0.9); t.position.set(-7.4, 0, -6 - i * 6); g.add(t); }
-  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#8a7d78' })); sky.position.set(0, 10, -30); g.add(sky);
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#8a7d78' })); sky.position.set(0, 10, -30); sky.name = 'sky'; g.add(sky);
   g.userData = { sun: [6, 9, 5], sunTarget: [-5, 0, 0], sunI: 1.4, hemi: 1.0, amb: 0.7, lamp: 0, bg: '#8a7d78' };
   return g;
 }
@@ -484,7 +484,7 @@ function buildIstana() { // ruang makan/tahta istana: dinding batu krem, karpet 
   const cloth = box(3.25, 0.02, 0.6, '#f1e4c6', { out: 0.006 }); cloth.position.set(0, 0.885, 0); g.add(cloth);
   for (const x of [-1.2, 1.2]) { const c = P.bottle('#f2c230'); c.position.set(x, 0.9, -0.2); g.add(c); }
   const wf = windowFrame(1.8, 2.4, 2, 3); wf.position.set(5.95, 3.0, 0.5); wf.rotation.y = -Math.PI / 2; g.add(wf);
-  g.userData = { sun: [10, 7, 2.5], sunTarget: [-1, 0.6, -0.5], sunI: 3.0, hemi: 1.1, amb: 0.75, lamp: 0, bg: '#2a1206', tableTop: 0.895 };
+  g.userData = { interior: true, lampPos: [0, 3.6, 0.5], sun: [10, 7, 2.5], sunTarget: [-1, 0.6, -0.5], sunI: 3.0, hemi: 1.1, amb: 0.75, lamp: 0, bg: '#2a1206', tableTop: 0.895 };
   return g;
 }
 function buildTaman() { // taman istana: rumput, pagar tanaman, pohon, tembok istana
@@ -494,8 +494,99 @@ function buildTaman() { // taman istana: rumput, pagar tanaman, pohon, tembok is
   const wall = box(30, 4, 0.6, '#d8c49a', { mat: toon('#ffffff', { map: brickTex('#d8c49a') }) }); wall.position.set(0, 2, -6); g.add(wall);
   for (let i = -3; i <= 3; i++) { const t = P.tree(1.1); t.position.set(i * 2.6, 0, -4.6 + (i % 2) * 0.4); g.add(t); }
   for (const sx of [-1, 1]) { const hedge = box(0.6, 0.7, 8, '#3e7d2c'); hedge.position.set(sx * 2.4, 0.35, 0); g.add(hedge); }
-  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#f0c890' })); sky.position.set(0, 10, -12); g.add(sky);
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#f0c890' })); sky.position.set(0, 10, -12); sky.name = 'sky'; g.add(sky);
   g.userData = { sun: [6, 8, 6], sunTarget: [0, 0, 0], sunI: 3.0, hemi: 1.0, amb: 0.5, lamp: 0, bg: '#f0c890' };
+  return g;
+}
+
+function paintTex(base = '#d9b98a', trim = '#8a5a30') { // dinding cat + lis kayu bawah
+  return canvasTex(512, 512, (x, w, h) => { x.fillStyle = base; x.fillRect(0, 0, w, h); const r = rnd(12);
+    for (let i = 0; i < 900; i++) { x.fillStyle = `rgba(0,0,0,${r() * 0.04})`; x.fillRect(r() * w, r() * h, 3, 3); }
+    x.fillStyle = trim; x.fillRect(0, h * 0.78, w, h * 0.22); x.fillStyle = INK_CSS; x.fillRect(0, h * 0.78 - 3, w, 6);
+    x.strokeStyle = 'rgba(30,10,0,0.5)'; x.lineWidth = 3; for (let i = 0; i < 8; i++) { x.beginPath(); x.moveTo(i * w / 8, h * 0.78); x.lineTo(i * w / 8, h); x.stroke(); } });
+}
+function house(wallC = '#e6d3a8', roofC = '#b5462a', w = 3, d = 3, h = 2.2) { // rumah kampung: dinding + atap limas + pintu + jendela
+  const g = new THREE.Group(); const b = box(w, h, d, wallC); b.position.y = h / 2; g.add(b);
+  const roof = mk(new THREE.ConeGeometry(Math.max(w, d) * 0.82, 1.3, 4), roofC, { out: 'm' }); roof.rotation.y = Math.PI / 4; roof.position.y = h + 0.65; roof.scale.set(w / Math.max(w, d), 1, d / Math.max(w, d)); g.add(roof);
+  const door = box(0.7, 1.4, 0.05, '#6b3a1a'); door.position.set(-w * 0.2, 0.7, d / 2 + 0.02); g.add(door);
+  const win = box(0.7, 0.6, 0.05, '#3a2a40'); win.position.set(w * 0.22, 1.35, d / 2 + 0.02); g.add(win);
+  const frame = box(0.8, 0.07, 0.07, '#f1ede2', { out: 0.006 }); frame.position.set(w * 0.22, 1.35, d / 2 + 0.05); g.add(frame);
+  return g;
+}
+function palm(s = 1) { const g = new THREE.Group(); const t = cyl(0.07 * s, 0.1 * s, 3.2 * s, '#8a6a3a'); t.position.y = 1.6 * s; t.rotation.z = 0.12; g.add(t);
+  for (let i = 0; i < 6; i++) { const lf = mk(new THREE.ConeGeometry(0.16 * s, 1.5 * s, 6), '#3e8a2c', { out: 's' }); lf.position.set(0.2 * s, 3.2 * s, 0); lf.rotation.set(0, i * Math.PI / 3, 1.9); const piv = new THREE.Group(); piv.add(lf); piv.rotation.y = i * Math.PI / 3; piv.position.x = 0.15 * s; g.add(piv); }
+  return g; }
+function buildRumah() { // ruang tamu rumah: dinding cat, sofa, TV, jendela bergorden, karpet, foto, jam
+  const g = new THREE.Group(); g.name = 'rumah';
+  const ft = woodTex('#b07a48', { planks: 8, seed: 61, nails: false }); ft.wrapS = ft.wrapT = THREE.RepeatWrapping; ft.repeat.set(3, 3);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), toon('#ffffff', { map: ft })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; g.add(floor);
+  const wt = paintTex('#d9b98a', '#8a5a30'); wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(2.5, 1);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(14, 4.2), toon('#ffffff', { map: wt })); back.position.set(0, 2.1, -3); back.receiveShadow = true; g.add(back);
+  for (const sx of [-1, 1]) { const sw = new THREE.Mesh(new THREE.PlaneGeometry(14, 4.2), toon('#ffffff', { map: wt })); sw.position.set(sx * 4.5, 2.1, 2); sw.rotation.y = -sx * Math.PI / 2; sw.receiveShadow = true; g.add(sw); }
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), toon('#4a3020')); ceil.position.y = 4.2; ceil.rotation.x = Math.PI / 2; g.add(ceil);
+  const rug = box(3.2, 0.015, 2.2, '#8a2a3a', { out: 0.01 }); rug.position.set(0, 0.008, 0.6); g.add(rug);
+  const rug2 = box(2.6, 0.017, 1.6, '#c9a04a', { out: 0 }); rug2.position.set(0, 0.01, 0.6); g.add(rug2);
+  // sofa
+  const sofa = new THREE.Group(); const sb = box(2.4, 0.45, 0.9, '#3a6a8a'); sb.position.y = 0.3; sofa.add(sb); const sbk = box(2.4, 0.7, 0.25, '#3a6a8a'); sbk.position.set(0, 0.75, -0.35); sofa.add(sbk);
+  for (const sx of [-1, 1]) { const arm = box(0.25, 0.6, 0.9, '#2f5a76'); arm.position.set(sx * 1.2, 0.45, 0); sofa.add(arm); }
+  sofa.position.set(0, 0, -2.3); g.add(sofa);
+  const ct = P.table(1.2, 0.45, 0.6, '#7a4a24'); ct.position.set(0, 0, -0.9); g.add(ct);
+  // TV + lemari
+  const cab = box(1.6, 0.6, 0.5, '#6e3e1c'); cab.position.set(-3.6, 0.3, 0.8); cab.rotation.y = Math.PI / 2; g.add(cab);
+  const tv = box(1.2, 0.75, 0.08, '#1a1a22'); tv.position.set(-3.6, 1.0, 0.8); tv.rotation.y = Math.PI / 2; g.add(tv);
+  // jendela bergorden
+  const wf = windowFrame(1.6, 1.4, 2, 2); wf.position.set(4.45, 2.0, 0.2); wf.rotation.y = -Math.PI / 2; g.add(wf);
+  for (const sz of [-1, 1]) { const cu = box(0.06, 1.9, 0.5, '#c0392b'); cu.position.set(4.4, 2.0, 0.2 + sz * 1.05); g.add(cu); }
+  const clock = cyl(0.25, 0.25, 0.04, '#f1ede2'); clock.rotation.x = Math.PI / 2; clock.position.set(1.8, 2.8, -2.97); g.add(clock);
+  const hand = box(0.02, 0.18, 0.01, '#222', { out: 0 }); hand.position.set(1.8, 2.87, -2.94); g.add(hand);
+  for (const [x, c] of [[-1.4, '#e2b04a'], [-0.6, '#7ab0d0']]) { const fr = box(0.55, 0.42, 0.03, '#5a3218', { out: 0.01 }); fr.position.set(x, 2.5, -2.97); g.add(fr); const ph = box(0.45, 0.32, 0.035, c, { out: 0 }); ph.position.set(x, 2.5, -2.96); g.add(ph); }
+  const pot = cyl(0.2, 0.15, 0.4, '#b5462a'); pot.position.set(3.6, 0.2, -2.4); g.add(pot); const pl = mk(new THREE.IcosahedronGeometry(0.45, 1), '#3e8a2c', { out: 'm' }); pl.position.set(3.6, 0.8, -2.4); g.add(pl);
+  const lamp = P.lamp(); lamp.position.set(0, 3.5, -0.5); g.add(lamp);
+  g.userData = { interior: true, lampPos: [0, 3.2, -0.3], sun: [9, 4.5, 0.5], sunTarget: [-1, 0.5, -0.5], sunI: 3.0, hemi: 1.1, amb: 0.8, lamp: 0, bg: '#2a1206' };
+  return g;
+}
+function buildKampung() { // jalan desa: tanah, rumah-rumah atap genteng, pagar bambu, kelapa, sawah, gunung
+  const g = new THREE.Group(); g.name = 'kampung';
+  const gt = grassTex(); gt.wrapS = gt.wrapT = THREE.RepeatWrapping; gt.repeat.set(10, 10);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), toon('#ffffff', { map: gt })); ground.rotation.x = -Math.PI / 2; ground.position.z = -15; ground.receiveShadow = true; g.add(ground);
+  const rt2 = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#b08a52'; x.fillRect(0, 0, w, h); const r = rnd(4); for (let i = 0; i < 1500; i++) { x.fillStyle = `rgba(${80 + r() * 50},${55 + r() * 30},${25 + r() * 20},0.5)`; x.fillRect(r() * w, r() * h, 3, 3); } }, { repeat: [1, 10] });
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 60), toon('#ffffff', { map: rt2 })); road.rotation.x = -Math.PI / 2; road.position.set(0, 0.01, -15); road.receiveShadow = true; g.add(road);
+  const cols = [['#e6d3a8', '#b5462a'], ['#cfe0c0', '#8a3a24'], ['#f0d6c0', '#a8502a'], ['#d8d0f0', '#7a3a2a']];
+  for (let i = 0; i < 5; i++) { const [wc, rc] = cols[i % 4]; const h1 = house(wc, rc); h1.position.set(-4.6, 0, -2 - i * 6); h1.rotation.y = Math.PI / 2; g.add(h1); }
+  // sawah di kanan
+  const st = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#6aa83a'; x.fillRect(0, 0, w, h); x.strokeStyle = 'rgba(40,90,20,0.8)'; x.lineWidth = 3; for (let i = 0; i < 16; i++) { x.beginPath(); x.moveTo(0, i * 16); x.lineTo(w, i * 16); x.stroke(); } }, { repeat: [4, 8] });
+  const sawah = new THREE.Mesh(new THREE.PlaneGeometry(18, 40), toon('#ffffff', { map: st })); sawah.rotation.x = -Math.PI / 2; sawah.position.set(11.5, 0.02, -14); sawah.receiveShadow = true; g.add(sawah);
+  for (let z = 2; z > -34; z -= 1.2) { const pole = cyl(0.03, 0.03, 0.9, '#d9b04a', { out: 's' }); pole.position.set(2.3, 0.45, z); g.add(pole); }
+  for (const y of [0.35, 0.75]) { const rail = cyl(0.022, 0.022, 36, '#d9b04a', { out: 's' }); rail.rotation.x = Math.PI / 2; rail.position.set(2.3, y, -16); g.add(rail); }
+  for (let i = 0; i < 6; i++) { const pm = palm(1 + (i % 2) * 0.2); pm.position.set(i % 2 ? 4.5 : -2.6, 0, -4 - i * 5.5); g.add(pm); }
+  for (const [x, z, s2] of [[-14, -42, 9], [2, -46, 12], [18, -44, 10]]) { const m = mk(new THREE.ConeGeometry(s2, s2 * 0.8, 6), '#5a8a8a', { out: 'l', shadow: false }); m.position.set(x, s2 * 0.4, z); g.add(m); }
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(140, 60), new THREE.MeshBasicMaterial({ color: '#f0c08a', fog: false })); sky.position.set(0, 18, -50); sky.name = 'sky'; g.add(sky);
+  g.userData = { sun: [7, 8, 5], sunTarget: [0, 0, -4], sunI: 3.1, hemi: 1.0, amb: 0.5, lamp: 0, bg: '#f0c08a', lampPos: [-2.2, 3.0, -1] };
+  return g;
+}
+function buildPasar() { // pasar/lorong kios beratap terpal dengan lampu gantung (cantik untuk malam)
+  const g = new THREE.Group(); g.name = 'pasar';
+  const ft = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#8a7a6a'; x.fillRect(0, 0, w, h); x.strokeStyle = 'rgba(40,30,20,0.4)'; x.lineWidth = 3; for (let i = 0; i <= 4; i++) { x.beginPath(); x.moveTo(i * 64, 0); x.lineTo(i * 64, h); x.moveTo(0, i * 64); x.lineTo(w, i * 64); x.stroke(); } }, { repeat: [4, 20] });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 50), toon('#ffffff', { map: ft })); floor.rotation.x = -Math.PI / 2; floor.position.z = -15; floor.receiveShadow = true; g.add(floor);
+  const fruitC = ['#e04a3a', '#f0b030', '#3fa04a', '#e86fa0', '#f07a2a'];
+  for (const sx of [-1, 1]) for (let i = 0; i < 6; i++) {
+    const z = -i * 3.4; const st = new THREE.Group();
+    const tbl = box(1.2, 0.8, 2.8, '#8a4a1e'); tbl.position.set(sx * 2.0, 0.4, z); st.add(tbl);
+    const r = rnd(i * 7 + (sx > 0 ? 3 : 1));
+    for (let k = 0; k < 14; k++) { const f = sph(0.09, fruitC[Math.floor(r() * 5)], { out: 's' }); f.position.set(sx * 2.0 + (r() - 0.5) * 0.9, 0.88, z + (r() - 0.5) * 2.4); st.add(f); }
+    const tc = [['#d63a2f', '#f1e4c6'], ['#2f7fbf', '#f1e4c6'], ['#3a9a4a', '#f1e4c6']][(i + (sx > 0 ? 1 : 0)) % 3];
+    const tt = canvasTex(256, 128, (x, w, h) => { for (let k = 0; k < 8; k++) { x.fillStyle = tc[k % 2]; x.fillRect(k * w / 8, 0, w / 8, h); } });
+    const tarp = box(1.8, 0.05, 3.2, '#fff', { mat: toon('#ffffff', { map: tt }), out: 0.012 }); tarp.position.set(sx * 2.1, 2.5, z); tarp.rotation.z = sx * 0.3; st.add(tarp);
+    for (const pz of [-1.4, 1.4]) { const pole = cyl(0.035, 0.035, 2.5, '#5a3a20', { out: 's' }); pole.position.set(sx * 1.35, 1.25, z + pz); st.add(pole); }
+    g.add(st);
+  }
+  // untaian lampu di atas lorong
+  for (let i = 0; i < 26; i++) { const z = 1.5 - i * 0.75; const y = 3.0 - Math.abs(Math.sin(i * 0.9)) * 0.25;
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), new THREE.MeshBasicMaterial({ color: ['#ffd27a', '#ff9a6a', '#fff0b0'][i % 3] })); b.position.set(Math.sin(i * 1.7) * 0.4, y, z); g.add(b); }
+  const wire = cyl(0.008, 0.008, 20, '#222', { out: false }); wire.rotation.x = Math.PI / 2; wire.position.set(0, 3.05, -8); g.add(wire);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(14, 8), toon('#ffffff', { map: brickTex('#b89a7a') })); back.position.set(0, 4, -22); g.add(back);
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#f0b07a', fog: false })); sky.position.set(0, 14, -30); sky.name = 'sky'; g.add(sky);
+  g.userData = { sun: [6, 9, 4], sunTarget: [0, 0, -5], sunI: 3.0, hemi: 1.0, amb: 0.55, lamp: 0, bg: '#f0b07a', lampPos: [0, 2.8, 0.5] };
   return g;
 }
 
@@ -559,10 +650,10 @@ function drawIcon(ic, t) { // ikon 2D kecil: tetes keringat, Z, hati, "!" — me
 // ---------------------------------------------------------------- post-process (grading)
 const postScene = new THREE.Scene(); const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 const postMat = new THREE.ShaderMaterial({
-  uniforms: { tDiffuse: { value: rt.texture }, time: { value: 0 }, res: { value: new THREE.Vector2(W, H) }, vig: { value: 1.0 }, warm: { value: 1.0 }, exposure: { value: 1.0 } },
+  uniforms: { tDiffuse: { value: rt.texture }, time: { value: 0 }, res: { value: new THREE.Vector2(W, H) }, vig: { value: 1.0 }, warm: { value: 1.0 }, exposure: { value: 1.0 }, sat: { value: 1.0 }, tint: { value: new THREE.Vector3(1, 1, 1) }, lift: { value: new THREE.Vector3(0, 0, 0) } },
   vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.,1.); }`,
   fragmentShader: `
-    uniform sampler2D tDiffuse; uniform float time, vig, warm, exposure; uniform vec2 res; varying vec2 vUv;
+    uniform sampler2D tDiffuse; uniform float time, vig, warm, exposure, sat; uniform vec3 tint, lift; uniform vec2 res; varying vec2 vUv;
     float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)))*43758.5453); }
     vec3 lin2srgb(vec3 c){ return pow(c, vec3(1.0/2.2)); }
     void main(){
@@ -575,7 +666,10 @@ const postMat = new THREE.ShaderMaterial({
       vec3 warmTint = vec3(1.03, 0.98, 0.90);
       c = mix(c, c*warmTint, warm);
       c.b = mix(c.b, c.b*c.b*1.15 + 0.0, 0.25*warm*(1.0-l));   // biru di bayangan ditekan
-      c = mix(vec3(l), c, 1.0);
+      c *= tint;                                         // warna suasana (malam biru, sedih pucat, dst.)
+      l = dot(c, vec3(0.299,0.587,0.114));
+      c = mix(vec3(l), c, sat);                          // saturasi suasana
+      c += lift*(1.0-l);                                 // angkat bayangan ke warna suasana
       c = clamp((c-0.03)/0.97, 0.0, 1.0);               // crush black
       c = c*c*(3.0-2.0*c)*0.4 + c*0.6;                  // kurva S
       c += vec3(0.03,0.01,0.0)*(1.0-l)*warm;            // bayangan coklat-kemerahan
@@ -591,6 +685,63 @@ const postMat = new THREE.ShaderMaterial({
   depthTest: false, depthWrite: false,
 });
 postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMat));
+
+// ---------------------------------------------------------------- suasana (mood)
+// BASE = waktu/cuaca (mengatur cahaya & langit). MOD = emosi (mengubah grading). Gabung: "malam+tegang".
+// Nilai *I dan exp/sat/vig adalah pengali terhadap nilai set; sore = tampilan referensi.
+const MOOD_BASE = {
+  sore:  { sunC: '#ffeedb', sunI: 1.0, el: null, hemiS: '#fff2e2', hemiG: '#5a3a28', hemiI: 1.0, ambC: '#8a6a58', ambI: 1.0, exp: 1.0, warm: 1.0, sat: 1.0, tint: [1, 1, 1], lift: [0, 0, 0], vig: 1.0, sky: null, fog: null, lamp: 0, dust: 1 },
+  pagi:  { sunC: '#fff4e0', sunI: 0.85, el: 16, hemiS: '#f2f4ff', hemiG: '#6a5040', hemiI: 1.15, ambC: '#9a8a80', ambI: 1.0, exp: 1.06, warm: 0.5, sat: 0.95, tint: [1.0, 1.0, 1.04], lift: [0.01, 0.015, 0.03], vig: 0.8, sky: '#bfd9ea', fog: { c: '#e9e3d6', n: 14, f: 55 }, lamp: 0, dust: 1.2 },
+  siang: { sunC: '#fffaf0', sunI: 1.1, el: 58, hemiS: '#f6f8ff', hemiG: '#6a5a40', hemiI: 1.25, ambC: '#a09080', ambI: 1.1, exp: 1.08, warm: 0.45, sat: 1.06, tint: [1, 1, 1], lift: [0, 0, 0], vig: 0.7, sky: '#8fc4e8', fog: null, lamp: 0, dust: 0.6 },
+  malam: { sunC: '#8fa4ff', sunI: 0.32, el: 40, hemiS: '#5a6ab0', hemiG: '#24161e', hemiI: 0.55, ambC: '#3a3052', ambI: 0.75, exp: 0.95, warm: 0.3, sat: 0.85, tint: [0.86, 0.9, 1.14], lift: [0.0, 0.005, 0.03], vig: 1.3, sky: '#151a38', fog: { c: '#151a38', n: 10, f: 42 }, lamp: 3.4, dust: 0.5 },
+  hujan: { sunC: '#dfe6ee', sunI: 0.35, el: 50, hemiS: '#c8d0dc', hemiG: '#3a3a40', hemiI: 1.0, ambC: '#6a6a78', ambI: 1.0, exp: 0.86, warm: 0.35, sat: 0.75, tint: [0.95, 0.98, 1.05], lift: [0.0, 0.01, 0.02], vig: 1.15, sky: '#7a818d', fog: { c: '#7a818d', n: 7, f: 30 }, lamp: 1.2, rain: 1, dust: 0 },
+  mendung: { sunC: '#e6e2da', sunI: 0.45, el: 45, hemiS: '#d6d6dc', hemiG: '#4a4038', hemiI: 1.05, ambC: '#7a7470', ambI: 1.0, exp: 0.92, warm: 0.45, sat: 0.8, tint: [0.98, 0.98, 1.02], lift: [0, 0, 0.01], vig: 1.1, sky: '#a4a6ad', fog: { c: '#a4a6ad', n: 12, f: 45 }, lamp: 0, dust: 0.4 },
+};
+const MOOD_MOD = {
+  tegang:  { exp: 0.88, sat: 1.1, vig: 1.3, warmA: 0.1, tint: [1.06, 0.96, 0.92], sunI: 1.1 },
+  sedih:   { exp: 0.9, sat: 0.6, vig: 1.25, warmA: -0.3, tint: [0.96, 0.98, 1.04], sunI: 0.8 },
+  ceria:   { exp: 1.08, sat: 1.18, vig: 0.75, warmA: 0.05, tint: [1.02, 1.01, 0.98], sunI: 1.1, hemiI: 1.1 },
+  misteri: { exp: 0.82, sat: 0.8, vig: 1.45, warmA: -0.25, tint: [0.92, 0.93, 1.1], sunI: 0.7, fogK: 0.6 },
+  mewah:   { exp: 1.04, sat: 1.18, vig: 1.0, warmA: 0.15, tint: [1.06, 1.0, 0.86], sparkle: 1 },
+  lega:    { exp: 1.04, sat: 1.0, vig: 0.85, warmA: 0.0, tint: [1.0, 1.0, 1.0], sunI: 1.05 },
+};
+function resolveMood(str) {
+  const parts = (str || 'sore').split('+').map(x => x.trim());
+  const base = { ...(MOOD_BASE[parts.find(x => MOOD_BASE[x])] || MOOD_BASE.sore) };
+  base.tint = [...base.tint];
+  for (const m of parts) { const d = MOOD_MOD[m]; if (!d) continue;
+    base.exp *= d.exp ?? 1; base.sat *= d.sat ?? 1; base.vig *= d.vig ?? 1; base.warm = Math.max(0, base.warm + (d.warmA ?? 0));
+    base.sunI *= d.sunI ?? 1; base.hemiI *= d.hemiI ?? 1; if (d.tint) base.tint = base.tint.map((v, i) => v * d.tint[i]);
+    if (d.fogK && base.fog) base.fog = { ...base.fog, n: base.fog.n * d.fogK, f: base.fog.f * d.fogK };
+    if (d.fogK && !base.fog) base.fog = { c: '#1a1630', n: 6, f: 24 };
+    if (d.sparkle) base.sparkle = 1; }
+  return base;
+}
+const _v = new THREE.Vector3();
+function applyMood(s, setObj, tg) {
+  const u = setObj.userData, m = resolveMood(s.mood);
+  // matahari: arah horizontal dari set, ketinggian dari suasana (interior dibatasi agar cahaya tetap masuk jendela)
+  if (s.sun) sun.position.set(...s.sun);
+  else if (m.el == null) sun.position.set(...u.sun);
+  else { const t0 = new THREE.Vector3(...u.sunTarget); _v.set(...u.sun).sub(t0); const dist = _v.length(); _v.y = 0; _v.normalize();
+    const el = (u.interior ? Math.min(m.el, 30) : m.el) * Math.PI / 180; sun.position.copy(t0).addScaledVector(_v, Math.cos(el) * dist); sun.position.y = t0.y + Math.sin(el) * dist; }
+  sun.color.set(s.sunColor || m.sunC); sun.intensity = s.sunI ?? u.sunI * m.sunI;
+  hemi.color.set(m.hemiS); hemi.groundColor.set(m.hemiG); hemi.intensity = u.hemi * m.hemiI; fill.color.set(m.ambC); fill.intensity = u.amb * m.ambI;
+  // langit / latar
+  const sky = setObj.getObjectByName('sky'); const skyC = s.sky || m.sky;
+  if (sky) { if (!sky.userData.c0) sky.userData.c0 = '#' + sky.material.color.getHexString(); sky.material.color.set(skyC || sky.userData.c0); }
+  scene.background = new THREE.Color(u.interior ? (m.sky && m.lamp ? '#0c0a14' : u.bg) : (skyC || u.bg));
+  scene.fog = m.fog && !s.noFog ? new THREE.Fog(m.fog.c, m.fog.n, m.fog.f) : null;
+  // lampu praktis (malam/hujan): menyala di posisi lampu set atau di atas subjek
+  const li = s.lamp ?? m.lamp; lampLight.intensity = li * 2.6; lampLight.decay = 1.0; if (li) { const lp = s.lampAt || u.lampPos || [tg[0], 2.9, tg[2] + 0.8]; lampLight.position.set(...lp); lampLight.distance = 10; lampLight.color.set(s.lampColor || '#ffc27a'); }
+  // grading
+  const U = postMat.uniforms;
+  U.exposure.value = s.exposure ?? m.exp; U.warm.value = s.warm ?? m.warm; U.vig.value = s.vig ?? m.vig; U.sat.value = s.sat ?? m.sat;
+  U.tint.value.set(...(s.tint || m.tint)); U.lift.value.set(...m.lift);
+  return m;
+}
+const sparkles = (() => { const r = rnd(55); return Array.from({ length: 26 }, () => ({ x: r() * OW, y: r() * OH * 0.8, ph: r() * 6, s: 6 + r() * 10 })); })();
+function drawSparkle(t) { ox.save(); for (const p of sparkles) { const a = Math.max(0, Math.sin(t * 3 + p.ph)); if (a < 0.2) continue; ox.globalAlpha = a * 0.8; ox.fillStyle = '#ffe9a0'; ox.translate(p.x, p.y); ox.rotate(Math.PI / 4); ox.fillRect(-p.s * a / 2, -1.5, p.s * a, 3); ox.fillRect(-1.5, -p.s * a / 2, 3, p.s * a); ox.setTransform(1, 0, 0, 1, 0, 0); } ox.restore(); }
 
 // ---------------------------------------------------------------- timeline
 let STORY = null; let curSet = null;
@@ -659,8 +810,6 @@ function capAt(T) { for (const c of STORY.captions) if (T >= c.s && T < c.e) ret
 window.renderAt = function (T) {
   const [s, lt] = shotAt(T);
   useSet(s.set);
-  if (s.sun) sun.position.set(...s.sun); else sun.position.set(...sets[s.set].userData.sun);
-  sun.intensity = s.sunI ?? sets[s.set].userData.sunI;
   // aktor
   for (const id in chars) { const a = s.actors?.[id]; if (!a) { chars[id].root.visible = false; continue; } applyActor(chars[id], a, lt, s.dur); }
   for (const id in props) { const p = s.props?.[id]; if (!p) { props[id].visible = false; continue; } applyProp(props[id], p, lt, s.dur); }
@@ -671,13 +820,15 @@ window.renderAt = function (T) {
   camera.position.set(p[0] + shake, p[1] + shake * 0.6, p[2]); camera.lookAt(...tg);
   camera.fov = c.fov2 ? c.fov + (c.fov2 - c.fov) * k : (c.fov || 35); camera.updateProjectionMatrix();
   if (c.roll) camera.rotation.z += c.roll;
-  // render 3D → grading
-  postMat.uniforms.time.value = T; postMat.uniforms.vig.value = s.vig ?? 1; postMat.uniforms.warm.value = s.warm ?? 1; postMat.uniforms.exposure.value = s.exposure ?? 1;
+  // suasana → cahaya, langit, kabut, lampu, grading
+  const md = applyMood(s, sets[s.set], tg);
+  postMat.uniforms.time.value = T;
   renderer.setRenderTarget(rt); renderer.render(scene, camera);
   renderer.setRenderTarget(null); renderer.render(postScene, postCam);
   // komposit 2D
   ox.imageSmoothingQuality = 'high'; ox.drawImage(renderer.domElement, 0, 0, OW, OH);
-  if (s.rain) drawRain(T, s.rain); else drawDust(T, s.dust ?? 1);
+  const rain = s.rain ?? (sets[s.set].userData.interior ? 0 : md.rain);   // hujan otomatis hanya di eksterior if (rain) drawRain(T, rain); else drawDust(T, s.dust ?? md.dust);
+  if (md.sparkle || s.sparkle) drawSparkle(T);
   (s.icons || []).forEach(ic => { if (lt >= (ic.t || 0)) drawIcon(ic, lt - (ic.t || 0)); });
   (s.callouts || []).forEach(co => { if (lt >= (co.t || 0)) drawCallout(co, lt - (co.t || 0)); });
   if (s.math) drawMath(s.math, lt);
@@ -693,7 +844,7 @@ window.frameJPEG = () => out.toDataURL('image/jpeg', 0.93);
 window.loadStory = async function (story) {
   await document.fonts.load('700 78px Poppins'); await document.fonts.load('800 84px Poppins'); await document.fonts.load('900 80px Poppins');
   lights();
-  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman();
+  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
   sets.bank.position.set(0, 0, 60); sets.street.position.set(60, 0, 0);
   for (const k in sets) scene.add(sets[k]);
   // offset world agar set terpisah: shot memakai koordinat lokal set → kita geser kamera/aktor via parent
