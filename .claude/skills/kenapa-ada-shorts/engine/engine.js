@@ -1190,9 +1190,10 @@ window.renderAt = function (T) {
     (s.icons || []).forEach(ic => { if (lt >= (ic.t || 0)) drawIcon(ic, lt - (ic.t || 0)); });
     (s.callouts || []).forEach(co => { if (lt >= (co.t || 0)) drawCallout(co, lt - (co.t || 0)); });
   }
-  if (s.math) drawMath(s.math, lt);
+  const HF = STORY.finish === 'hyperframes';     // caption & rumus digambar oleh HyperFrames (HTML/GSAP), bukan engine
+  if (s.math && !HF) drawMath(s.math, lt);
   const cap = capAt(T);
-  if (cap) { const a = Math.min(1, (T - cap.s) / 0.12, (cap.e - T) / 0.1); const sc = 1; drawCaption(cap.text, cap.c, Math.max(0, a), sc); }
+  if (cap && !HF) { const a = Math.min(1, (T - cap.s) / 0.12, (cap.e - T) / 0.1); const sc = 1; drawCaption(cap.text, cap.c, Math.max(0, a), sc); }
   // fade dari/ke hitam di awal & akhir
   const fin = Math.min(1, T / 0.25), fout = Math.min(1, (STORY.total - T) / 0.6);
   const f = Math.min(fin, fout); if (f < 1) { ox.fillStyle = `rgba(0,0,0,${1 - f})`; ox.fillRect(0, 0, OW, OH); }

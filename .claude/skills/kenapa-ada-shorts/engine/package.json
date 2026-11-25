@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@fontsource/poppins": "5.1.0",
+    "gsap": "3.12.5",
+    "hyperframes": "0.9.94",
     "three": "0.170.0"
   }
 }

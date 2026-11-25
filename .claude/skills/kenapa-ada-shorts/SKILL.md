@@ -25,7 +25,7 @@ Skill ini adalah hasil bedah 3 video referensi. **Baca dulu**:
    - Suasana diisi otomatis dari narasi saat `S.build()` (kata pagi/siang/sore/malam/hujan + kata emosi). Timpa per shot dengan `"mood": "malam+tegang"` bila perlu.
    - `S.build()` mencetak `LOKASI`, `SUASANA`, dan `PERINGATAN` monoton. Perbaiki semua peringatan sebelum preview.
 5. **Preview** — `engine/preview.sh story.json pv` → contact sheet `pv/sheet_*.jpg` (still tiap shot). WAJIB dilihat (Read) dan diperbaiki sebelum render penuh: kamera tembus kepala/dinding, wajah tertutup caption, karakter membelakangi kamera, prop hilang.
-6. **Render + audio + mux** — `TEMPO=1.25 engine/make_video.sh path/to/build.py workdir` → `workdir/FINAL.mp4`. Mode 3D: ±1.5 dtk/frame (±75 menit untuk 100 dtk) dengan AO+DOF; `S.opts.update(ao=False)` ±1 dtk/frame; `style:"toon"` ±0.5 dtk/frame. CPU 4 core sudah terpakai penuh → jangan render dua video bersamaan. Jalankan di background.
+6. **Render + audio + finishing** — `TEMPO=1.25 engine/make_video.sh path/to/build.py workdir` → `workdir/FINAL.mp4`. Mode 3D: ±1.5 dtk/frame (±75 menit untuk 100 dtk) dengan AO+DOF; `S.opts.update(ao=False)` ±1 dtk/frame; `style:"toon"` ±0.5 dtk/frame. CPU 4 core sudah terpakai penuh → jangan render dua video bersamaan. Jalankan di background. Finishing default memakai **HyperFrames** (lihat bagian di bawah); `FINISH=engine` untuk cara lama.
 7. **QC** — ambil frame acak + cek `ffmpeg -af ebur128` (target -14.5 LUFS, LRA ±2). Kirim file ke pengguna (SendUserFile) dan commit sumber (bukan MP4 besar kecuali diminta).
 
 ## Mode visual 3D (default)
@@ -46,6 +46,28 @@ Sejak versi ini semua video dirender sebagai **animasi 3D penuh**, bukan tampila
 Opsi di `build.py`: `S.opts.update(style="3d"|"toon", ao=True|False, dof=True|False, scale=0.82, outline=0|1)`; per shot: `"dof": 0.0018` (aperture; 0 = tajam semua), `cam.arc`.
 Tips 3D: close-up wajah (jarak 1–1.6 m) paling memamerkan volume; beri arah cahaya miring (bukan frontal); hindari dua shot dengan busur searah berturut-turut (engine sudah selang-seling).
 
+## Finishing dengan HyperFrames (default)
+
+HyperFrames (`hyperframes@0.9.94`, open-source HeyGen: komposisi HTML + GSAP → MP4) dipasang di `engine/node_modules` dan dipakai sebagai lapisan akhir:
+
+| Lapisan | Dibuat oleh |
+|---|---|
+| Adegan 3D (karakter, set, kamera, AO, DOF, teks/ikon 3D, foto produk 3D) | engine Three.js → `video_silent.mp4` (tanpa caption & rumus karena `story.finish = "hyperframes"`) |
+| Audio (narasi + musik + SFX, -14.5 LUFS) | `audio.py` → `mix.wav` |
+| Caption 1–2 kata, rumus pojok, end card produk | `hf_compose.py` → proyek `hf/` (root + sub-komposisi `captions`, `graphics`, `endcard`, timeline GSAP) |
+| Video final | `hyperframes render hf` → `FINAL.mp4` |
+
+```bash
+TEMPO=1.1 engine/make_video.sh build.py workdir            # otomatis: render 3D → audio → hf/ → lint → render HyperFrames
+engine/node_modules/.bin/hyperframes lint hf               # validasi (target: 0 error, 0 warning)
+engine/node_modules/.bin/hyperframes snapshot hf           # PNG frame kunci untuk QC
+engine/node_modules/.bin/hyperframes preview hf            # Studio: ubah teks/waktu caption, rumus, end card lalu render ulang (±3× realtime, tanpa render 3D ulang)
+```
+- End card produk: `S.opts.update(endcard={"img": "foto.jpg", "title": "NAMA PRODUK", "sub": "Ajakan singkat", "dur": 2.5})` (foto di folder kerja).
+- Revisi caption/rumus/end card cukup edit `hf/` dan render HyperFrames lagi (detik–menit), tidak perlu render 3D ulang (puluhan menit).
+- Selalu set `HYPERFRAMES_NO_UPDATE_CHECK=1 HYPERFRAMES_NO_TELEMETRY=1`; render lokal dengan `--no-browser-gpu --workers 2`. GSAP dimuat lokal (`assets/gsap.min.js`) karena CDN bisa diblokir.
+- Panduan lengkap HyperFrames (komposisi, GSAP, audio, captions): `engine/node_modules/hyperframes/dist/skills/hyperframes/SKILL.md` dan `hyperframes docs <topik>`.
+
 ## Konten soft-selling / foto produk
 - Foto produk asli pengguna bisa masuk video: taruh file di folder kerja (sebelah `story.json`), lalu `S.opts.update(images={"produk": "/work/foto.jpg"})`.
 - Per shot: `"photos": [{"img": "produk", "x": 540, "y": 700, "w": 820, "t": 0.15, "tilt": 0.12}]` → kartu foto 3D melayang berbingkai (mode toon: gambar 2D). Tampilkan besar saat nama produk disebut, kecil di shot terakhir untuk pengingat merek.
@@ -54,7 +76,7 @@ Tips 3D: close-up wajah (jarak 1–1.6 m) paling memamerkan volume; beri arah ca
 
 ## Setup engine
 ```bash
-cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
+cd engine && npm install          # three@0.170.0, @fontsource/poppins@5.1.0, gsap@3.12.5, hyperframes@0.9.94
 # Chromium + Playwright sudah ada di container (require('playwright')).
 ```
 `render.js` membuka `index.html` lewat server lokal, WebGL via SwiftShader, menyalurkan JPEG frame ke ffmpeg (libx264 CRF 18, yuv420p).
@@ -107,6 +129,7 @@ Visual harus **mengikuti isi narasi**, bukan diam di satu tempat. Aturan:
 Lokasi tersedia: `warung` (warung kayu), `rumah` (ruang tamu: sofa, TV, jendela gorden), `street` (gang pasar + bank), `pasar` (lorong kios buah + untaian lampu), `kampung` (jalan desa, rumah genteng, sawah, kelapa, gunung), `halte` (halte bis + jalan raya), `bank` (loket), `istana` (ruang tahta + meja makan), `taman` (taman istana/kota). Tambah lokasi baru bila cerita butuh (lihat Ekstensi).
 
 ## Checklist kecocokan dengan referensi
+- [ ] Finishing HyperFrames: `hyperframes lint hf` 0 error/0 warning; caption & rumus tampil di FINAL.mp4.
 - [ ] Mode 3D aktif: wajah 3D, bayangan lembut, AO, DOF, teks callout 3D timbul (kecuali sengaja `style:"toon"`).
 - [ ] Caption Poppins Bold putih + kuning kata kunci, 1–2 kata, y≈1352, shadow lembut.
 - [ ] Setiap shot push-in pelan, hard cut di awal frasa, rata-rata < 2.5 dtk.
