@@ -18,6 +18,7 @@ class Story:
         self.cursor = 0
         self.shots = []                       # (t_start, spec)
         self.cast, self.props = {}, {}
+        self.opts = {"style": "3d"}           # mode visual default: 3D penuh
 
     # ---------- waktu
     def T(self, sec):
@@ -137,6 +138,7 @@ class Story:
         if auto_mood: self.auto_moods(timed, start_clock)
         if lint: self.lint(res)
         story = {"cast": self.cast, "props": self.props, "shots": res, "captions": self.captions(yellow)}
+        story.update(self.opts)   # style ("3d"|"toon"), ao, dof, scale, outline
         json.dump(story, open(out_path, "w"), indent=1)
         return story
 

@@ -1,6 +1,6 @@
 ---
 name: kenapa-ada-shorts
-description: Membuat YouTube Shorts/Reels/TikTok 9:16 (±95–110 dtk) bergaya kartun 3D toon "Kenapa Ada Orang/Pelanggan yang Cuma …?" — tokoh kepala bulat krem ber-outline tebal, tokoh misterius berponi menutupi mata, warung kayu bercahaya sore hangat, caption 1–2 kata Poppins putih/kuning, callout angka kuning, rumus hitungan pojok kanan atas, narasi santai cepat, lokasi & suasana (pagi/siang/sore/malam/hujan + emosi) berganti mengikuti narasi agar tidak monoton. Meniru persis 3 video referensi (koin kembalian, es teh tawar 5 jam, mancing lepas ikan) dari ide → naskah 13 beat → suara ElevenLabs → storyboard → render Three.js → grading → mix audio → MP4 1080×1920 30 fps. Pakai saat pengguna minta "video kenapa ada", "cerita pelanggan aneh", "shorts kartun warung", "video seperti referensi koin/es teh/mancing", atau /kenapa-ada-shorts.
+description: Membuat YouTube Shorts/Reels/TikTok 9:16 (±95–110 dtk) bergaya animasi kartun 3D penuh (wajah 3D, PBR, AO, depth of field, teks & partikel 3D) "Kenapa Ada Orang/Pelanggan yang Cuma …?" — tokoh kepala bulat krem ber-outline tebal, tokoh misterius berponi menutupi mata, warung kayu bercahaya sore hangat, caption 1–2 kata Poppins putih/kuning, callout angka kuning, rumus hitungan pojok kanan atas, narasi santai cepat, lokasi & suasana (pagi/siang/sore/malam/hujan + emosi) berganti mengikuti narasi agar tidak monoton. Meniru persis 3 video referensi (koin kembalian, es teh tawar 5 jam, mancing lepas ikan) dari ide → naskah 13 beat → suara ElevenLabs → storyboard → render Three.js → grading → mix audio → MP4 1080×1920 30 fps. Pakai saat pengguna minta "video kenapa ada", "cerita pelanggan aneh", "shorts kartun warung", "video seperti referensi koin/es teh/mancing", atau /kenapa-ada-shorts.
 ---
 
 # Kenapa-Ada Shorts
@@ -25,8 +25,26 @@ Skill ini adalah hasil bedah 3 video referensi. **Baca dulu**:
    - Suasana diisi otomatis dari narasi saat `S.build()` (kata pagi/siang/sore/malam/hujan + kata emosi). Timpa per shot dengan `"mood": "malam+tegang"` bila perlu.
    - `S.build()` mencetak `LOKASI`, `SUASANA`, dan `PERINGATAN` monoton. Perbaiki semua peringatan sebelum preview.
 5. **Preview** — `engine/preview.sh story.json pv` → contact sheet `pv/sheet_*.jpg` (still tiap shot). WAJIB dilihat (Read) dan diperbaiki sebelum render penuh: kamera tembus kepala/dinding, wajah tertutup caption, karakter membelakangi kamera, prop hilang.
-6. **Render + audio + mux** — `TEMPO=1.25 engine/make_video.sh path/to/build.py workdir` → `workdir/FINAL.mp4`. Render ±0.5 dtk/frame (±25–30 menit untuk 105 dtk) → jalankan di background.
+6. **Render + audio + mux** — `TEMPO=1.25 engine/make_video.sh path/to/build.py workdir` → `workdir/FINAL.mp4`. Mode 3D: ±1.5 dtk/frame (±75 menit untuk 100 dtk) dengan AO+DOF; `S.opts.update(ao=False)` ±1 dtk/frame; `style:"toon"` ±0.5 dtk/frame. CPU 4 core sudah terpakai penuh → jangan render dua video bersamaan. Jalankan di background.
 7. **QC** — ambil frame acak + cek `ffmpeg -af ebur128` (target -14.5 LUFS, LRA ±2). Kirim file ke pengguna (SendUserFile) dan commit sumber (bukan MP4 besar kecuali diminta).
+
+## Mode visual 3D (default)
+
+Sejak versi ini semua video dirender sebagai **animasi 3D penuh**, bukan tampilan toon/2D:
+
+| Elemen | Mode `3d` (default) | Mode `toon` (lama, mirip referensi) |
+|---|---|---|
+| Material | PBR (`MeshStandardMaterial`) + pantulan lingkungan (RoomEnvironment) | toon 4 tingkat + outline tebal |
+| Wajah | Mesh 3D di permukaan kepala: mata ellipsoid mengilap + titik pantul, alis kapsul, mulut torus / "D" ekstrusi + lidah, mata ^^ torus, mata spiral tube, mata kaget bola + pupil, keringat 3D bening | tekstur 2D digambar di kanvas |
+| Cahaya | Matahari + bayangan lembut (PCFSoft), hemisphere, **rim light** dari belakang subjek, lampu praktis | matahari keras |
+| Ruang | **GTAO** (ambient occlusion: kontak & lekukan gelap), **depth of field** (fokus otomatis ke target kamera), tone mapping filmis ACES | datar |
+| Kamera | push-in + **busur parallax ±4°** otomatis tiap shot (`cam.arc` untuk atur/0 untuk mematikan) | push-in |
+| Callout & ikon | **Teks 3D timbul** Poppins ExtraBold (bevel, berayun masuk) + panah 3D; ikon 3D (keringat, hati, !, ?, Z) | gambar 2D |
+| Partikel | debu `Points` 3D, hujan garis 3D jatuh, kilau emas 3D | titik/garis 2D |
+| Tetap 2D | caption (agar terbaca, sesuai referensi) & rumus pojok kanan atas | sama |
+
+Opsi di `build.py`: `S.opts.update(style="3d"|"toon", ao=True|False, dof=True|False, scale=0.82, outline=0|1)`; per shot: `"dof": 0.0018` (aperture; 0 = tajam semua), `cam.arc`.
+Tips 3D: close-up wajah (jarak 1–1.6 m) paling memamerkan volume; beri arah cahaya miring (bukan frontal); hindari dua shot dengan busur searah berturut-turut (engine sudah selang-seling).
 
 ## Setup engine
 ```bash
@@ -83,6 +101,7 @@ Visual harus **mengikuti isi narasi**, bukan diam di satu tempat. Aturan:
 Lokasi tersedia: `warung` (warung kayu), `rumah` (ruang tamu: sofa, TV, jendela gorden), `street` (gang pasar + bank), `pasar` (lorong kios buah + untaian lampu), `kampung` (jalan desa, rumah genteng, sawah, kelapa, gunung), `halte` (halte bis + jalan raya), `bank` (loket), `istana` (ruang tahta + meja makan), `taman` (taman istana/kota). Tambah lokasi baru bila cerita butuh (lihat Ekstensi).
 
 ## Checklist kecocokan dengan referensi
+- [ ] Mode 3D aktif: wajah 3D, bayangan lembut, AO, DOF, teks callout 3D timbul (kecuali sengaja `style:"toon"`).
 - [ ] Caption Poppins Bold putih + kuning kata kunci, 1–2 kata, y≈1352, shadow lembut.
 - [ ] Setiap shot push-in pelan, hard cut di awal frasa, rata-rata < 2.5 dtk.
 - [ ] Grading hangat-coklat, biru diremukkan, vignette berat, grain, debu melayang.

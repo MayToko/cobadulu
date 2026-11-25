@@ -115,6 +115,9 @@ Resep (post shader engine, urutan):
 ## 15b. Suasana per adegan (pembaruan)
 Referensi dominan sore-hangat, tetapi tiap video tetap berganti lokasi 4–6 kali (warung ↔ gang ↔ bank ↔ loket; kolam ↔ saung ↔ loket ↔ jalan) dan berganti waktu sesuai kata narasi ("Suatu sore", "Datangnya pagi", "Suatu siang"). Engine kini punya preset `pagi/siang/sore/malam/hujan/mendung` + modifier emosi `tegang/sedih/ceria/misteri/mewah/lega` yang dipilih otomatis dari narasi; `sore` identik dengan grading referensi.
 
+## 15c. Peningkatan ke 3D penuh (pembaruan)
+Referensi memakai 3D toon yang terlihat datar. Skill kini default ke **3D penuh**: karakter & properti sama bentuknya, tetapi di-shade PBR dengan pantulan lingkungan, wajah berupa geometri 3D (mata mengilap, mulut berongga), bayangan lembut, ambient occlusion, depth of field, rim light, kamera berbusur (parallax), teks angka & ikon 3D, partikel 3D. Grading hangat, vignette, grain, caption tetap seperti referensi agar identitas seri terjaga. Tampilan toon lama tetap tersedia lewat `style: "toon"`.
+
 ## 16. Visual continuity
 - Karakter tidak pernah berubah desain antar shot; posisi baku per set (pemilik selalu di balik etalase, pelanggan di depan).
 - Prop kunci (kaleng koin, toples, gantungan payung) selalu di posisi sama → penonton paham perubahan (penuh → kosong).
