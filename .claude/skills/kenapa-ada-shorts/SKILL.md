@@ -1,0 +1,73 @@
+---
+name: kenapa-ada-shorts
+description: Membuat YouTube Shorts/Reels/TikTok 9:16 (±95–110 dtk) bergaya kartun 3D toon "Kenapa Ada Orang/Pelanggan yang Cuma …?" — tokoh kepala bulat krem ber-outline tebal, tokoh misterius berponi menutupi mata, warung kayu bercahaya sore hangat, caption 1–2 kata Poppins putih/kuning, callout angka kuning, rumus hitungan pojok kanan atas, narasi santai cepat. Meniru persis 3 video referensi (koin kembalian, es teh tawar 5 jam, mancing lepas ikan) dari ide → naskah 13 beat → suara ElevenLabs → storyboard → render Three.js → grading → mix audio → MP4 1080×1920 30 fps. Pakai saat pengguna minta "video kenapa ada", "cerita pelanggan aneh", "shorts kartun warung", "video seperti referensi koin/es teh/mancing", atau /kenapa-ada-shorts.
+---
+
+# Kenapa-Ada Shorts
+
+Skill ini adalah hasil bedah 3 video referensi. **Baca dulu**:
+- `references/style-bible.md` — spesifikasi terukur: karakter, VFX, grading, kamera (angle, movement, framing, komposisi, lensa, DOF), exposure, fokus, lighting, suhu warna, kontinuitas, caption, audio.
+- `references/naskah-template.md` — kerangka 13 beat yang dipakai ketiga referensi + ide topik.
+- `examples/payung/build.py` — contoh storyboard lengkap (64 shot) yang sudah jadi video.
+
+## Alur kerja
+
+1. **Ide & judul** — format wajib "Kenapa Ada [Orang/Pelanggan] yang Cuma [aksi aneh]?". Cerita orisinal; twist = tokoh misterius ternyata menjalankan bisnis cerdik yang dihitung angkanya.
+2. **Naskah** — ikuti 13 beat (`naskah-template.md`), 210–260 kata, kalimat pendek, bahasa lisan. Tunjukkan naskah ke pengguna bila mereka ingin menyetujui dulu; kalau diminta langsung jadi, lanjut.
+3. **Narasi (ElevenLabs MCP)**
+   - `creative_create_flow` → `creative_list_voices` (languages `["id"]`, gender male, use_case narrative_story). Default: **"Lucky Adrian"** (santai, cocok short-form) — pilih ulang dari daftar bila id berubah.
+   - `creative_generate_speech` model `eleven_v3`, `generations_count: 1`, seluruh naskah satu kali.
+   - `creative_transcribe_audio` (`connect_from` = node speech) → dapat `words` (start/end per kata).
+   - Unduh `content_url` audio → `vo_raw.mp3` dan `words_download_url` → `words.json` (host `elevenlabsusercontent.com` harus diizinkan di jaringan environment; jika diblokir, minta via `update_environment`).
+   - Narasi v3 biasanya ±1.7 kata/dtk; referensi ±2.2 kata/dtk → pakai `TEMPO=1.25` (atempo, pitch tetap).
+4. **Storyboard** — salin `examples/payung/build.py`, ganti cast/props/shot. Satu `S.shot("frasa anchor", {...})` per frasa narasi (cut tepat saat frasa diucapkan). Target 55–65 shot / 100 dtk, tiap shot 1–2.5 dtk.
+5. **Preview** — `engine/preview.sh story.json pv` → contact sheet `pv/sheet_*.jpg` (still tiap shot). WAJIB dilihat (Read) dan diperbaiki sebelum render penuh: kamera tembus kepala/dinding, wajah tertutup caption, karakter membelakangi kamera, prop hilang.
+6. **Render + audio + mux** — `TEMPO=1.25 engine/make_video.sh path/to/build.py workdir` → `workdir/FINAL.mp4`. Render ±0.5 dtk/frame (±25–30 menit untuk 105 dtk) → jalankan di background.
+7. **QC** — ambil frame acak + cek `ffmpeg -af ebur128` (target -14.5 LUFS, LRA ±2). Kirim file ke pengguna (SendUserFile) dan commit sumber (bukan MP4 besar kecuali diminta).
+
+## Setup engine
+```bash
+cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
+# Chromium + Playwright sudah ada di container (require('playwright')).
+```
+`render.js` membuka `index.html` lewat server lokal, WebGL via SwiftShader, menyalurkan JPEG frame ke ffmpeg (libx264 CRF 18, yuv420p).
+
+## Format story.json (dibuat oleh build.py)
+```jsonc
+{
+  "cast":  { "pria": {"body":"#7a4a24","hair":"cover","bag":true}, "bu": {"body":"#3b3f9a","hair":"hijab"} },
+  "props": { "rack": {"type":"umbrellaRack","args":[5]} },
+  "shots": [{
+    "dur": 1.6, "set": "warung",                 // warung | street | bank | halte
+    "cam": {"p":[x,y,z], "p2":[...], "t":[...], "t2":[...], "fov":36, "ease":"l"},  // push-in p→p2
+    "actors": { "bu": {"pos":[x,0,z], "rot":0, "expr":"worried", "anim":"nod",
+                        "to":[x,0,z], "exprAt":[[0.7,"shock"]], "armR":[-2.4,0.2], "give":true} },
+    "props":  { "rack": {"pos":[...], "rot":[deg,deg,deg], "scale":1, "to":[...], "grow":0.3} },
+    "callouts": [{"text":"3 RB", "at":[x,y,z] | "x":540,"y":560, "size":96, "color":"#f4c430", "arrow":true}],
+    "math": {"lines":["10 PAYUNG","× 10 JALAN"], "at":[0,0.3], "result":"300 RB", "resultAt":0.3},
+    "icons": [{"type":"drop|q|z|heart|bang", "at":[x,y,z], "t":0.2}],
+    "rain": 1, "exposure": 0.85, "sunI": 1.2, "sun":[x,y,z], "dust": 1, "vig": 1, "warm": 1
+  }],
+  "captions": [{"s":0.0,"e":0.6,"text":"Dia datang","c":"w|y"}]
+}
+```
+- Karakter menghadap +Z saat `rot:0`; `rot` derajat searah sumbu Y (90 = menghadap +X).
+- Tinggi karakter ±2.15 m (kepala pusat y≈1.78). Etalase warung: atas y=1.11, z∈[-0.48,0.48]; pemilik di z≈-0.95, pelanggan z≈+1.05. Trotoar halte y=0.15.
+- `story_lib.DIST` (contoh: 1.7) mengalikan jarak kamera→target; pakai `cam(..., raw=True)` untuk over-the-shoulder/kamera di sela dinding.
+- Close-up: target kamera ±0.15 m di bawah pusat kepala supaya wajah di sepertiga atas dan caption (70 % tinggi) tidak menutupi mata/mulut.
+- Prop yang dipegang: `hand_up(pos, rot)` (payung terbuka, `armR:[-2.4,0.2]`), `hand_side(pos, rot)` (dijinjing).
+
+### Ekstensi
+- Set baru: tambah `buildXxx()` di `engine.js` (lantai + dinding bertekstur `woodTex/brickTex/grassTex`, `windowFrame()` agar bayangan kisi muncul, `userData` sun/hemi/amb/bg) lalu daftarkan di `loadStory`.
+- Prop baru: tambah fungsi di objek `P` (pakai `box/cyl/sph/mk` agar outline otomatis).
+- Ekspresi baru: tambah `case` di `drawFace` (kanvas 512², mata y≈250, mulut y≈345).
+
+## Checklist kecocokan dengan referensi
+- [ ] Caption Poppins Bold putih + kuning kata kunci, 1–2 kata, y≈1352, shadow lembut.
+- [ ] Setiap shot push-in pelan, hard cut di awal frasa, rata-rata < 2.5 dtk.
+- [ ] Grading hangat-coklat, biru diremukkan, vignette berat, grain, debu melayang.
+- [ ] Bayangan keras dari jendela, outline tebal ungu-hitam di semua objek.
+- [ ] Tokoh misterius berponi menutupi mata; pemilik ekspresif (worried → annoyed → dizzy → shock).
+- [ ] Callout angka kuning + panah, rumus pojok kanan atas, hasil hijau.
+- [ ] Narasi ±2.2 kata/dtk, musik latar terus-menerus, -14.5 LUFS.
+- [ ] Ditutup "Oh iya, besoknya…" + punchline.
