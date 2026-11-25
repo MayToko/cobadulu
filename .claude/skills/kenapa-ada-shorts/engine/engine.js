@@ -347,6 +347,20 @@ const P = {
   bill() { const t = canvasTex(256, 360, (x, w, h) => { x.fillStyle = '#f5efe0'; x.fillRect(0, 0, w, h); x.fillStyle = '#2e6f9e'; x.fillRect(0, 0, w, 50); x.fillStyle = '#fff'; x.font = '800 30px Poppins'; x.fillText('LISTRIK', 60, 36); x.fillStyle = '#9a9080'; for (let i = 0; i < 6; i++) x.fillRect(20, 80 + i * 30, 150 + (i % 3) * 25, 8); x.fillStyle = '#c0392b'; x.font = '800 40px Poppins'; x.fillText('Rp500.000', 22, 320); });
     return box(0.26, 0.005, 0.36, '#fff', { mat: toon('#ffffff', { map: t }), out: 0.006 }); },
   coffee() { const g = new THREE.Group(); const b = cyl(0.06, 0.05, 0.12, '#f1ede2'); b.position.y = 0.06; g.add(b); const c = cyl(0.055, 0.055, 0.01, '#4a2a14', { out: false }); c.position.y = 0.115; g.add(c); return g; },
+  crown(c = '#f2c230', s = 1) { const g = new THREE.Group(); const b = mk(new THREE.CylinderGeometry(0.2 * s, 0.22 * s, 0.12 * s, 24, 1, true), c, { out: 's' }); b.userData.mesh.material = toon(c, { side: THREE.DoubleSide }); g.add(b);
+    for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const sp = mk(new THREE.ConeGeometry(0.045 * s, 0.13 * s, 8), c, { out: 's' }); sp.position.set(Math.sin(a) * 0.2 * s, 0.11 * s, Math.cos(a) * 0.2 * s); g.add(sp); const j = sph(0.022 * s, i % 2 ? '#d0302a' : '#2e6fd0', { out: false }); j.position.set(Math.sin(a) * 0.212 * s, 0.0, Math.cos(a) * 0.212 * s); g.add(j); }
+    return g; },
+  chefHat() { const g = new THREE.Group(); const b = cyl(0.2, 0.2, 0.18, '#f4f0e6'); g.add(b); [[-0.1, 0], [0.1, 0], [0, 0.08], [0, -0.08]].forEach(([x, z]) => { const p = sph(0.15, '#f4f0e6', { out: 'm' }); p.position.set(x, 0.18, z); g.add(p); }); return g; },
+  vial(c = '#5fd35a') { const g = new THREE.Group(); const b = sph(0.045, c, { out: 's' }); b.position.y = 0.045; g.add(b); const n = cyl(0.015, 0.018, 0.06, c, { out: 's' }); n.position.y = 0.11; g.add(n); const k = cyl(0.02, 0.02, 0.025, '#8a5a2a', { out: 's' }); k.position.y = 0.15; g.add(k); return g; },
+  soup() { const g = new THREE.Group(); const b = mk(new THREE.SphereGeometry(0.16, 32, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), '#e8e3d0', { out: 'm' }); b.userData.mesh.material = toon('#e8e3d0', { side: THREE.DoubleSide }); b.position.y = 0.15; g.add(b); const s2 = cyl(0.15, 0.15, 0.01, '#d9822a', { out: false }); s2.position.y = 0.13; g.add(s2); return g; },
+  teacup() { const g = new THREE.Group(); const b = cyl(0.06, 0.045, 0.08, '#f1ede2'); b.position.y = 0.04; g.add(b); const t = cyl(0.055, 0.055, 0.005, '#8a4a1a', { out: false }); t.position.y = 0.078; g.add(t); const pl = cyl(0.1, 0.1, 0.01, '#f1ede2', { out: 's' }); g.add(pl); return g; },
+  cake() { const g = new THREE.Group(); const b = cyl(0.16, 0.16, 0.12, '#e8b0c0'); b.position.y = 0.06; g.add(b); const t = cyl(0.165, 0.165, 0.03, '#f4f0e6'); t.position.y = 0.13; g.add(t); const c = sph(0.03, '#d0302a', { out: 's' }); c.position.y = 0.17; g.add(c); return g; },
+  pot() { const g = new THREE.Group(); const b = mk(new THREE.CylinderGeometry(0.3, 0.26, 0.4, 32, 1, true), '#3a3a44', { out: 'm' }); b.userData.mesh.material = toon('#3a3a44', { side: THREE.DoubleSide }); b.position.y = 0.2; g.add(b); const s2 = cyl(0.28, 0.28, 0.01, '#d9822a', { out: false }); s2.position.y = 0.34; g.add(s2); return g; },
+  chest() { const g = new THREE.Group(); const b = box(0.7, 0.4, 0.45, '#7a3a1a'); b.position.y = 0.2; g.add(b); const band = box(0.72, 0.06, 0.47, '#f2c230', { out: 0.006 }); band.position.y = 0.3; g.add(band);
+    const gold = P.coinsGold(30); gold.position.y = 0.4; g.add(gold); return g; },
+  coinsGold(n = 30) { const g = new THREE.Group(); const r = rnd(9); for (let i = 0; i < n; i++) { const c = cyl(0.045, 0.045, 0.01, '#f2c230', { out: 's' }); c.position.set((r() - 0.5) * 0.55, r() * 0.08, (r() - 0.5) * 0.32); c.rotation.set((r() - 0.5) * 0.7, 0, (r() - 0.5) * 0.7); g.add(c); } return g; },
+  jahe() { const g = new THREE.Group(); for (let i = 0; i < 3; i++) { const b = sph(0.05, '#c9a060', { out: 's' }); b.scale.set(1.5, 0.8, 0.9); b.position.set(i * 0.07, 0.03 + (i % 2) * 0.02, (i % 2) * 0.03); b.rotation.z = i * 0.6; g.add(b); } return g; },
+  hood(c = '#3a2a4a') { const h = mk(new THREE.SphereGeometry(0.44, 40, 24, 0, Math.PI * 2, 0, 2.2), c, { out: 'l' }); h.userData.mesh.material = toon(c, { side: THREE.DoubleSide }); h.rotation.x = 0.55; return h; },
   kresek() { const g = new THREE.Group(); const b = mk(new THREE.SphereGeometry(0.42, 32, 20, 0, Math.PI * 2, 0, 1.7), '#f1ede2', { out: 'm' }); b.userData.mesh.material = toon('#f1ede2', { side: THREE.DoubleSide }); b.scale.set(1, 0.95, 1); g.add(b);
     for (const sx of [-1, 1]) { const e = mk(new THREE.TorusGeometry(0.07, 0.018, 8, 20), '#f1ede2', { out: 's' }); e.position.set(sx * 0.2, 0.42, 0); e.rotation.z = -sx * 0.4; g.add(e); } return g; },
   helmet(c = '#2a4fa0') { const g = new THREE.Group(); const h = mk(new THREE.SphereGeometry(0.4, 32, 20, 0, Math.PI * 2, 0, 1.5), c, { out: 'm' }); g.add(h); const v = mk(new THREE.SphereGeometry(0.405, 32, 10, Math.PI / 2 - 0.8, 1.6, 0.9, 0.5), '#d9e6ee', { out: false }); g.add(v); return g; },
@@ -449,6 +463,39 @@ function buildHalte() { // halte bis di pinggir jalan saat hujan sore
   for (let i = 0; i < 4; i++) { const t = P.tree(0.9); t.position.set(-7.4, 0, -6 - i * 6); g.add(t); }
   const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#8a7d78' })); sky.position.set(0, 10, -30); g.add(sky);
   g.userData = { sun: [6, 9, 5], sunTarget: [-5, 0, 0], sunI: 1.4, hemi: 1.0, amb: 0.7, lamp: 0, bg: '#8a7d78' };
+  return g;
+}
+
+function buildIstana() { // ruang makan/tahta istana: dinding batu krem, karpet merah, tiang, jendela tinggi
+  const g = new THREE.Group(); g.name = 'istana';
+  const ft = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#b89a6a'; x.fillRect(0, 0, w, h); x.strokeStyle = 'rgba(60,40,15,0.5)'; x.lineWidth = 4; for (let i = 0; i <= 2; i++) { x.beginPath(); x.moveTo(i * 128, 0); x.lineTo(i * 128, h); x.moveTo(0, i * 128); x.lineTo(w, i * 128); x.stroke(); } }, { repeat: [7, 7] });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), toon('#ffffff', { map: ft })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; g.add(floor);
+  const carpet = box(1.6, 0.02, 12, '#a8222a', { out: 0.01 }); carpet.position.set(0, 0.01, 1); g.add(carpet);
+  const wt = brickTex('#d8c49a'); wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(3, 1.6);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(16, 8), toon('#ffffff', { map: wt })); back.position.set(0, 4, -4); back.receiveShadow = true; g.add(back);
+  for (const sx of [-1, 1]) { const side = new THREE.Mesh(new THREE.PlaneGeometry(16, 8), toon('#ffffff', { map: wt })); side.position.set(sx * 6, 4, 2); side.rotation.y = -sx * Math.PI / 2; side.receiveShadow = true; g.add(side); }
+  for (const x of [-3.4, -1.7, 1.7, 3.4]) { const p = cyl(0.22, 0.25, 5, '#e8dcc0', { out: 'm' }); p.position.set(x, 2.5, -3.5); g.add(p); }
+  const banner = box(1.0, 2.2, 0.03, '#a8222a', { out: 0.012 }); banner.position.set(-2.55, 3.3, -3.95); g.add(banner); const banner2 = banner.clone(); banner2.position.x = 2.55; g.add(banner2);
+  // tahta
+  const th = new THREE.Group(); const seat = box(1.0, 0.5, 0.8, '#d4a020'); seat.position.y = 0.25; th.add(seat); const backr = box(1.0, 1.6, 0.15, '#d4a020'); backr.position.set(0, 1.0, -0.35); th.add(backr); const cush = box(0.8, 1.2, 0.05, '#a8222a', { out: 0.008 }); cush.position.set(0, 1.0, -0.26); th.add(cush);
+  th.position.set(0, 0, -3.1); g.add(th);
+  // meja makan panjang
+  const tbl = P.table(3.2, 0.85, 1.0, '#8a4a1e'); tbl.position.set(0, 0, 0); g.add(tbl);
+  const cloth = box(3.25, 0.02, 0.6, '#f1e4c6', { out: 0.006 }); cloth.position.set(0, 0.885, 0); g.add(cloth);
+  for (const x of [-1.2, 1.2]) { const c = P.bottle('#f2c230'); c.position.set(x, 0.9, -0.2); g.add(c); }
+  const wf = windowFrame(1.8, 2.4, 2, 3); wf.position.set(5.95, 3.0, 0.5); wf.rotation.y = -Math.PI / 2; g.add(wf);
+  g.userData = { sun: [10, 7, 2.5], sunTarget: [-1, 0.6, -0.5], sunI: 3.0, hemi: 1.1, amb: 0.75, lamp: 0, bg: '#2a1206', tableTop: 0.895 };
+  return g;
+}
+function buildTaman() { // taman istana: rumput, pagar tanaman, pohon, tembok istana
+  const g = new THREE.Group(); g.name = 'taman';
+  const gt = grassTex(); gt.wrapS = gt.wrapT = THREE.RepeatWrapping; gt.repeat.set(8, 8);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), toon('#ffffff', { map: gt })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; g.add(ground);
+  const wall = box(30, 4, 0.6, '#d8c49a', { mat: toon('#ffffff', { map: brickTex('#d8c49a') }) }); wall.position.set(0, 2, -6); g.add(wall);
+  for (let i = -3; i <= 3; i++) { const t = P.tree(1.1); t.position.set(i * 2.6, 0, -4.6 + (i % 2) * 0.4); g.add(t); }
+  for (const sx of [-1, 1]) { const hedge = box(0.6, 0.7, 8, '#3e7d2c'); hedge.position.set(sx * 2.4, 0.35, 0); g.add(hedge); }
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#f0c890' })); sky.position.set(0, 10, -12); g.add(sky);
+  g.userData = { sun: [6, 8, 6], sunTarget: [0, 0, 0], sunI: 3.0, hemi: 1.0, amb: 0.5, lamp: 0, bg: '#f0c890' };
   return g;
 }
 
@@ -583,6 +630,8 @@ function applyActor(ch, a, lt, dur) {
   if (anim === 'jump') { rig.position.y = Math.max(0, Math.sin(Math.min(lt, 0.5) * Math.PI / 0.5)) * 0.3; }
   if (anim === 'tremble') { rig.position.x = Math.sin(lt * 60) * 0.008; }
   if (anim === 'lean') rig.rotation.x = 0.12;
+  if (anim === 'pushup') { const k = Math.max(0, Math.sin(lt * 6)); rig.rotation.x = 1.3; rig.position.set(0, 0.42 + k * 0.12, -0.6); ch.arms.forEach(a2 => { a2.rotation.x = -1.3; }); }
+  if (anim === 'run') { const p2 = lt * 14; ch.legs[0].rotation.x = Math.sin(p2) * 0.9; ch.legs[1].rotation.x = -Math.sin(p2) * 0.9; rig.position.y = Math.abs(Math.sin(p2)) * 0.08; ch.arms[0].rotation.x = -Math.sin(p2) * 0.8; ch.arms[1].rotation.x = Math.sin(p2) * 0.8; rig.rotation.x = 0.12; }
   if (anim === 'sit') { ch.legs.forEach(l => l.rotation.x = -1.45); ch.arms.forEach(a2 => a2.rotation.x = -0.5); }
   if (anim === 'turn') r.rotation.y = ((a.rot || 0) + ((a.rot2 ?? 0) - (a.rot || 0)) * ease.io(Math.min(1, lt / 0.5))) * Math.PI / 180;
   if (a.headTilt) ch.head.rotation.z = a.headTilt;
@@ -644,7 +693,7 @@ window.frameJPEG = () => out.toDataURL('image/jpeg', 0.93);
 window.loadStory = async function (story) {
   await document.fonts.load('700 78px Poppins'); await document.fonts.load('800 84px Poppins'); await document.fonts.load('900 80px Poppins');
   lights();
-  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte();
+  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman();
   sets.bank.position.set(0, 0, 60); sets.street.position.set(60, 0, 0);
   for (const k in sets) scene.add(sets[k]);
   // offset world agar set terpisah: shot memakai koordinat lokal set → kita geser kamera/aktor via parent

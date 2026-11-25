@@ -38,7 +38,7 @@ cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
   "cast":  { "pria": {"body":"#7a4a24","hair":"cover","bag":true}, "bu": {"body":"#3b3f9a","hair":"hijab"} },
   "props": { "rack": {"type":"umbrellaRack","args":[5]} },
   "shots": [{
-    "dur": 1.6, "set": "warung",                 // warung | street | bank | halte
+    "dur": 1.6, "set": "warung",                 // warung | street | bank | halte | istana | taman
     "cam": {"p":[x,y,z], "p2":[...], "t":[...], "t2":[...], "fov":36, "ease":"l"},  // push-in p→p2
     "actors": { "bu": {"pos":[x,0,z], "rot":0, "expr":"worried", "anim":"nod",
                         "to":[x,0,z], "exprAt":[[0.7,"shock"]], "armR":[-2.4,0.2], "give":true} },
@@ -55,6 +55,7 @@ cd engine && npm install          # three@0.170.0 + @fontsource/poppins@5.1.0
 - Tinggi karakter ±2.15 m (kepala pusat y≈1.78). Etalase warung: atas y=1.11, z∈[-0.48,0.48]; pemilik di z≈-0.95, pelanggan z≈+1.05. Trotoar halte y=0.15.
 - `story_lib.DIST` (contoh: 1.7) mengalikan jarak kamera→target; pakai `cam(..., raw=True)` untuk over-the-shoulder/kamera di sela dinding.
 - Close-up: target kamera ±0.15 m di bawah pusat kepala supaya wajah di sepertiga atas dan caption (70 % tinggi) tidak menutupi mata/mulut.
+- Animasi: idle, walk, run, nod, shake, laugh, jump, tremble, lean, sit, pushup, turn. Prop kerajaan: crown, chefHat, hood, vial, soup, teacup, cake, pot, chest, coinsGold, jahe.
 - Prop yang dipegang: `hand_up(pos, rot)` (payung terbuka, `armR:[-2.4,0.2]`), `hand_side(pos, rot)` (dijinjing).
 
 ### Ekstensi
