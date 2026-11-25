@@ -590,6 +590,36 @@ function buildPasar() { // pasar/lorong kios beratap terpal dengan lampu gantung
   return g;
 }
 
+function buildDapur() { // dapur istana: dinding batu, tungku menyala, panci besar, meja kerja, rak toples, wajan gantung
+  const g = new THREE.Group(); g.name = 'dapur';
+  const ft = canvasTex(256, 256, (x, w, h) => { x.fillStyle = '#8a6a4a'; x.fillRect(0, 0, w, h); x.strokeStyle = 'rgba(40,25,10,0.5)'; x.lineWidth = 4; for (let i = 0; i <= 4; i++) { x.beginPath(); x.moveTo(i * 64, 0); x.lineTo(i * 64, h); x.moveTo(0, i * 64); x.lineTo(w, i * 64); x.stroke(); } }, { repeat: [6, 6] });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), toon('#ffffff', { map: ft })); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; g.add(floor);
+  const wt = brickTex('#a89070'); wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(3, 1.5);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), toon('#ffffff', { map: wt })); back.position.set(0, 3, -3); back.receiveShadow = true; g.add(back);
+  for (const sx of [-1, 1]) { const sw = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), toon('#ffffff', { map: wt })); sw.position.set(sx * 4.6, 3, 2); sw.rotation.y = -sx * Math.PI / 2; sw.receiveShadow = true; g.add(sw); }
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), toon('#3a2414')); ceil.position.y = 4.2; ceil.rotation.x = Math.PI / 2; g.add(ceil);
+  for (const x of [-2.5, 0, 2.5]) { const bm = box(0.2, 0.2, 7, '#4e2a12'); bm.position.set(x, 4.0, 0); g.add(bm); }
+  // tungku bata dengan api
+  const hearth = new THREE.Group(); const hb = box(1.8, 1.0, 1.0, '#8a4a2a', { mat: toon('#ffffff', { map: brickTex('#a8563a') }) }); hb.position.y = 0.5; hearth.add(hb);
+  const hole = box(0.9, 0.5, 0.05, '#1a0a04', { out: 0.01 }); hole.position.set(0, 0.4, 0.51); hearth.add(hole);
+  for (let i = 0; i < 5; i++) { const fl = new THREE.Mesh(new THREE.ConeGeometry(0.08 + (i % 2) * 0.04, 0.3 + (i % 3) * 0.08, 8), new THREE.MeshBasicMaterial({ color: i % 2 ? '#ffb030' : '#ff6a1a' })); fl.position.set(-0.3 + i * 0.15, 0.32, 0.45); hearth.add(fl); }
+  const chim = box(1.2, 3.0, 0.4, '#7a5a40', { mat: toon('#ffffff', { map: brickTex('#9a7a5a') }) }); chim.position.set(0, 2.7, -0.32); hearth.add(chim);
+  const bigpot = P.pot(); bigpot.position.set(0, 1.0, 0.05); hearth.add(bigpot);
+  hearth.position.set(-2.2, 0, -2.4); g.add(hearth);
+  // meja kerja (setara etalase warung: permukaan y=1.0)
+  const wtb = woodTex('#a4632a', { planks: 4, seed: 71 }); const table = box(2.4, 0.08, 1.0, '#a4632a', { mat: toon('#ffffff', { map: wtb }) }); table.position.set(0, 0.96, 0); g.add(table);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const lg = box(0.08, 0.92, 0.08, '#6a3a18', { out: 0.01 }); lg.position.set(sx * 1.1, 0.46, sz * 0.42); g.add(lg); }
+  const veg = [['#e04a3a', 0.09], ['#f07a2a', 0.07], ['#3fa04a', 0.1], ['#d9c060', 0.08]]; veg.forEach(([c, r], i) => { const v = sph(r, c, { out: 's' }); v.position.set(0.6 + (i % 2) * 0.2, 1.0 + r, -0.25 + Math.floor(i / 2) * 0.2); g.add(v); });
+  const board = box(0.5, 0.03, 0.32, '#d9b07a', { out: 0.006 }); board.position.set(0.7, 1.015, 0.15); g.add(board);
+  // rak toples & wajan gantung
+  const sh = P.shelf(2.6, 3, 33); sh.position.set(1.6, 0.6, -2.75); g.add(sh);
+  for (let i = 0; i < 4; i++) { const pan = cyl(0.17 + i * 0.02, 0.15 + i * 0.02, 0.06, '#3a3a44'); pan.rotation.x = Math.PI / 2 - 0.1; pan.position.set(-0.9 + i * 0.5, 2.6, -2.9); g.add(pan); const hk = cyl(0.01, 0.01, 0.3, '#222', { out: false }); hk.position.set(-0.9 + i * 0.5, 2.9, -2.92); g.add(hk); }
+  const wf = windowFrame(1.6, 1.4, 2, 2); wf.position.set(4.55, 2.4, 0.3); wf.rotation.y = -Math.PI / 2; g.add(wf);
+  const door = box(1.0, 2.1, 0.08, '#5a3218'); door.position.set(-4.55, 1.05, 1.2); door.rotation.y = Math.PI / 2; g.add(door);
+  g.userData = { interior: true, lampAlways: 1.3, lampPos: [-2.0, 1.4, -1.4], sun: [9, 5.5, 1.5], sunTarget: [-1, 0.6, -1], sunI: 3.0, hemi: 1.05, amb: 0.75, lamp: 0, bg: '#2a1206', tableTop: 1.0 };
+  return g;
+}
+
 // ---------------------------------------------------------------- overlay 2D (caption, callout, debu)
 const out = document.createElement('canvas'); out.width = OW; out.height = OH; document.body.appendChild(out);
 const ox = out.getContext('2d');
@@ -693,7 +723,7 @@ const MOOD_BASE = {
   sore:  { sunC: '#ffeedb', sunI: 1.0, el: null, hemiS: '#fff2e2', hemiG: '#5a3a28', hemiI: 1.0, ambC: '#8a6a58', ambI: 1.0, exp: 1.0, warm: 1.0, sat: 1.0, tint: [1, 1, 1], lift: [0, 0, 0], vig: 1.0, sky: null, fog: null, lamp: 0, dust: 1 },
   pagi:  { sunC: '#fff4e0', sunI: 0.85, el: 16, hemiS: '#f2f4ff', hemiG: '#6a5040', hemiI: 1.15, ambC: '#9a8a80', ambI: 1.0, exp: 1.06, warm: 0.5, sat: 0.95, tint: [1.0, 1.0, 1.04], lift: [0.01, 0.015, 0.03], vig: 0.8, sky: '#bfd9ea', fog: { c: '#e9e3d6', n: 14, f: 55 }, lamp: 0, dust: 1.2 },
   siang: { sunC: '#fffaf0', sunI: 1.1, el: 58, hemiS: '#f6f8ff', hemiG: '#6a5a40', hemiI: 1.25, ambC: '#a09080', ambI: 1.1, exp: 1.08, warm: 0.45, sat: 1.06, tint: [1, 1, 1], lift: [0, 0, 0], vig: 0.7, sky: '#8fc4e8', fog: null, lamp: 0, dust: 0.6 },
-  malam: { sunC: '#8fa4ff', sunI: 0.32, el: 40, hemiS: '#5a6ab0', hemiG: '#24161e', hemiI: 0.55, ambC: '#3a3052', ambI: 0.75, exp: 0.95, warm: 0.3, sat: 0.85, tint: [0.86, 0.9, 1.14], lift: [0.0, 0.005, 0.03], vig: 1.3, sky: '#151a38', fog: { c: '#151a38', n: 10, f: 42 }, lamp: 3.4, dust: 0.5 },
+  malam: { sunC: '#a8b8ff', sunI: 0.45, el: 40, hemiS: '#7a86c0', hemiG: '#2a1c22', hemiI: 0.75, ambC: '#5a5070', ambI: 0.9, exp: 1.02, warm: 0.45, sat: 0.9, tint: [0.92, 0.94, 1.08], lift: [0.0, 0.005, 0.025], vig: 1.25, sky: '#151a38', fog: { c: '#151a38', n: 10, f: 42 }, lamp: 3.4, dust: 0.5 },
   hujan: { sunC: '#dfe6ee', sunI: 0.35, el: 50, hemiS: '#c8d0dc', hemiG: '#3a3a40', hemiI: 1.0, ambC: '#6a6a78', ambI: 1.0, exp: 0.86, warm: 0.35, sat: 0.75, tint: [0.95, 0.98, 1.05], lift: [0.0, 0.01, 0.02], vig: 1.15, sky: '#7a818d', fog: { c: '#7a818d', n: 7, f: 30 }, lamp: 1.2, rain: 1, dust: 0 },
   mendung: { sunC: '#e6e2da', sunI: 0.45, el: 45, hemiS: '#d6d6dc', hemiG: '#4a4038', hemiI: 1.05, ambC: '#7a7470', ambI: 1.0, exp: 0.92, warm: 0.45, sat: 0.8, tint: [0.98, 0.98, 1.02], lift: [0, 0, 0.01], vig: 1.1, sky: '#a4a6ad', fog: { c: '#a4a6ad', n: 12, f: 45 }, lamp: 0, dust: 0.4 },
 };
@@ -701,7 +731,7 @@ const MOOD_MOD = {
   tegang:  { exp: 0.88, sat: 1.1, vig: 1.3, warmA: 0.1, tint: [1.06, 0.96, 0.92], sunI: 1.1 },
   sedih:   { exp: 0.9, sat: 0.6, vig: 1.25, warmA: -0.3, tint: [0.96, 0.98, 1.04], sunI: 0.8 },
   ceria:   { exp: 1.08, sat: 1.18, vig: 0.75, warmA: 0.05, tint: [1.02, 1.01, 0.98], sunI: 1.1, hemiI: 1.1 },
-  misteri: { exp: 0.82, sat: 0.8, vig: 1.45, warmA: -0.25, tint: [0.92, 0.93, 1.1], sunI: 0.7, fogK: 0.6 },
+  misteri: { exp: 0.9, sat: 0.85, vig: 1.35, warmA: -0.15, tint: [0.95, 0.95, 1.06], sunI: 0.8, fogK: 0.7 },
   mewah:   { exp: 1.04, sat: 1.18, vig: 1.0, warmA: 0.15, tint: [1.06, 1.0, 0.86], sparkle: 1 },
   lega:    { exp: 1.04, sat: 1.0, vig: 0.85, warmA: 0.0, tint: [1.0, 1.0, 1.0], sunI: 1.05 },
 };
@@ -733,7 +763,7 @@ function applyMood(s, setObj, tg) {
   scene.background = new THREE.Color(u.interior ? (m.sky && m.lamp ? '#0c0a14' : u.bg) : (skyC || u.bg));
   scene.fog = m.fog && !s.noFog ? new THREE.Fog(m.fog.c, m.fog.n, m.fog.f) : null;
   // lampu praktis (malam/hujan): menyala di posisi lampu set atau di atas subjek
-  const li = s.lamp ?? m.lamp; lampLight.intensity = li * 2.6; lampLight.decay = 1.0; if (li) { const lp = s.lampAt || u.lampPos || [tg[0], 2.9, tg[2] + 0.8]; lampLight.position.set(...lp); lampLight.distance = 10; lampLight.color.set(s.lampColor || '#ffc27a'); }
+  const li = s.lamp ?? Math.max(m.lamp, u.lampAlways || 0);   // set dgn api/lampu selalu menyala (dapur) lampLight.intensity = li * 2.6; lampLight.decay = 1.0; if (li) { const lp = s.lampAt || u.lampPos || [tg[0], 2.9, tg[2] + 0.8]; lampLight.position.set(...lp); lampLight.distance = 10; lampLight.color.set(s.lampColor || '#ffc27a'); }
   // grading
   const U = postMat.uniforms;
   U.exposure.value = s.exposure ?? m.exp; U.warm.value = s.warm ?? m.warm; U.vig.value = s.vig ?? m.vig; U.sat.value = s.sat ?? m.sat;
@@ -844,7 +874,7 @@ window.frameJPEG = () => out.toDataURL('image/jpeg', 0.93);
 window.loadStory = async function (story) {
   await document.fonts.load('700 78px Poppins'); await document.fonts.load('800 84px Poppins'); await document.fonts.load('900 80px Poppins');
   lights();
-  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
+  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.dapur = buildDapur(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
   sets.bank.position.set(0, 0, 60); sets.street.position.set(60, 0, 0);
   for (const k in sets) scene.add(sets[k]);
   // offset world agar set terpisah: shot memakai koordinat lokal set → kita geser kamera/aktor via parent
