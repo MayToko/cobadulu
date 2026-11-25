@@ -528,6 +528,43 @@ const P = {
     const sign = P.sign(['KOPI 5RB', 'GORENGAN 2RB'], { bg: '#f4c430', fg: '#7a1a10', w: 512, h: 256, font: '900 64px Poppins', gw: 1.2, gh: 0.55 }); sign.position.set(0, 1.45, -0.25); g.add(sign);
     for (const sx of [-1, 1]) { const p = cyl(0.02, 0.02, 0.6, '#6a3a18', { out: 's' }); p.position.set(sx * 0.55, 1.15, -0.25); g.add(p); }
     return g; },
+  // --- motor bebek tua (menghadap +z): ban, spakbor, jok, setang, lampu, bagasi belakang
+  motor(c = '#3a6a8a', dusty = false) { const g = new THREE.Group(); const R = (geo, col, o = {}) => { const m = new THREE.Mesh(geo, STYLE3D ? new THREE.MeshStandardMaterial({ color: col, roughness: o.r ?? 0.5, metalness: o.m ?? 0.1 }) : toon(col)); m.castShadow = true; return m; };
+    const col = dusty ? new THREE.Color(c).lerp(new THREE.Color('#9a8a78'), 0.45).getStyle() : c;
+    for (const z of [0.52, -0.52]) { const w = R(new THREE.TorusGeometry(0.24, 0.07, 14, 28), '#1a1a1e', { r: 0.8 }); w.rotation.y = Math.PI / 2; w.position.set(0, 0.31, z); if (dusty) w.scale.set(1, 0.86, 1); g.add(w);
+      const hub = R(new THREE.CylinderGeometry(0.1, 0.1, 0.08, 16), '#b8bcc4', { m: 0.7, r: 0.3 }); hub.rotation.z = Math.PI / 2; hub.position.set(0, 0.31, z); g.add(hub); }
+    const body = R(new RoundedBoxGeometry(0.34, 0.36, 0.9, 3, 0.1), col); body.position.set(0, 0.58, -0.12); g.add(body);
+    const step = R(new RoundedBoxGeometry(0.36, 0.08, 0.5, 2, 0.03), '#2a2a30'); step.position.set(0, 0.36, 0.12); g.add(step);
+    const front = R(new RoundedBoxGeometry(0.3, 0.7, 0.2, 3, 0.08), col); front.position.set(0, 0.72, 0.42); front.rotation.x = -0.25; g.add(front);
+    const fender = R(new THREE.TorusGeometry(0.27, 0.05, 8, 20, Math.PI), col); fender.rotation.y = Math.PI / 2; fender.position.set(0, 0.33, 0.52); g.add(fender);
+    const seat = R(new RoundedBoxGeometry(0.3, 0.1, 0.6, 3, 0.04), dusty ? '#5a5048' : '#221f22', { r: 0.7 }); seat.position.set(0, 0.82, -0.2); g.add(seat);
+    const bar = R(new THREE.CylinderGeometry(0.02, 0.02, 0.62, 10), '#b8bcc4', { m: 0.7 }); bar.rotation.z = Math.PI / 2; bar.position.set(0, 1.12, 0.55); g.add(bar);
+    for (const sx of [-1, 1]) { const gr = R(new THREE.CylinderGeometry(0.03, 0.03, 0.12, 10), '#1a1a1e'); gr.rotation.z = Math.PI / 2; gr.position.set(sx * 0.33, 1.12, 0.55); g.add(gr);
+      const mir = R(new THREE.CylinderGeometry(0.05, 0.05, 0.015, 16), '#c8ccd4', { m: 0.8, r: 0.15 }); mir.rotation.x = Math.PI / 2; mir.position.set(sx * 0.2, 1.34, 0.5); g.add(mir); }
+    const lamp = R(new THREE.SphereGeometry(0.08, 16, 12), '#fff1c4', { r: 0.1 }); lamp.position.set(0, 1.02, 0.66); lamp.scale.set(1, 0.8, 0.6); g.add(lamp);
+    const rack = R(new RoundedBoxGeometry(0.32, 0.05, 0.26, 2, 0.02), '#2a2a30'); rack.position.set(0, 0.9, -0.62); g.add(rack);
+    if (dusty) for (let i = 0; i < 18; i++) { const d = R(new THREE.SphereGeometry(0.02, 6, 4), '#8a7a68'); const a = i * 2.4; d.position.set(Math.sin(a) * 0.12, 0.88, -0.2 + Math.cos(a * 1.3) * 0.25); d.scale.y = 0.3; g.add(d); }
+    return g; },
+  // --- mobil sedan kartun (menghadap +z)
+  car(c = '#e8e4dc') { const g = new THREE.Group(); const M = (col, o = {}) => STYLE3D ? new THREE.MeshPhysicalMaterial({ color: col, roughness: o.r ?? 0.25, metalness: o.m ?? 0.3, clearcoat: o.cc ?? 1 }) : toon(col);
+    const body = new THREE.Mesh(new RoundedBoxGeometry(1.7, 0.6, 3.9, 4, 0.22), M(c)); body.position.y = 0.6; body.castShadow = true; g.add(body);
+    const cab = new THREE.Mesh(new RoundedBoxGeometry(1.5, 0.55, 2.0, 4, 0.22), M(c)); cab.position.set(0, 1.12, -0.2); cab.castShadow = true; g.add(cab);
+    const glass = M('#22303e', { r: 0.05, m: 0.1 });
+    for (const [w, h, d, x, y, z, rx] of [[1.36, 0.42, 0.05, 0, 1.13, 0.82, -0.5], [1.36, 0.4, 0.05, 0, 1.13, -1.22, 0.5], [0.05, 0.38, 1.6, 0.76, 1.14, -0.2, 0], [0.05, 0.38, 1.6, -0.76, 1.14, -0.2, 0]]) { const p = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), glass); p.position.set(x, y, z); p.rotation.x = rx; g.add(p); }
+    for (const sx of [-1, 1]) for (const z of [1.25, -1.25]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.26, 24), M('#18181c', { r: 0.8, m: 0, cc: 0 })); w.rotation.z = Math.PI / 2; w.position.set(sx * 0.78, 0.34, z); w.castShadow = true; g.add(w);
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.27, 16), M('#c8ccd4', { r: 0.2, m: 0.9 })); hub.rotation.z = Math.PI / 2; hub.position.set(sx * 0.79, 0.34, z); g.add(hub); }
+    for (const sx of [-1, 1]) { const hl = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12), new THREE.MeshBasicMaterial({ color: '#fff4d0' })); hl.scale.set(1.3, 0.7, 0.4); hl.position.set(sx * 0.55, 0.68, 1.95); g.add(hl);
+      const tl2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.04), new THREE.MeshBasicMaterial({ color: '#d0302a' })); tl2.position.set(sx * 0.55, 0.7, -1.96); g.add(tl2); }
+    const grill = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.14, 0.04), M('#2a2a30', { r: 0.4 })); grill.position.set(0, 0.55, 1.96); g.add(grill);
+    return g; },
+  cone() { const g = new THREE.Group(); const m = STYLE3D ? new THREE.MeshStandardMaterial({ color: '#f07a1a', roughness: 0.45 }) : toon('#f07a1a');
+    const c = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.55, 24), m); c.position.y = 0.3; c.castShadow = true; g.add(c);
+    const band = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.105, 0.1, 24), STYLE3D ? new THREE.MeshStandardMaterial({ color: '#f4f4f0', roughness: 0.3 }) : toon('#f4f4f0')); band.position.y = 0.33; g.add(band);
+    const base = new THREE.Mesh(new RoundedBoxGeometry(0.36, 0.04, 0.36, 2, 0.01), m); base.position.y = 0.02; g.add(base); return g; },
+  vest() { const g = new THREE.Group(); const m = STYLE3D ? new THREE.MeshStandardMaterial({ color: '#f07a1a', roughness: 0.5, side: THREE.DoubleSide }) : toon('#f07a1a', { side: THREE.DoubleSide });
+    const v = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.33, 0.5, 32, 1, true), m); v.position.y = 1.18; g.add(v);
+    for (const y of [1.05, 1.25]) { const st = new THREE.Mesh(new THREE.CylinderGeometry(0.322, 0.332, 0.05, 32, 1, true), new THREE.MeshBasicMaterial({ color: '#f0f0e0', side: THREE.DoubleSide })); st.position.y = y; g.add(st); } return g; },
+  money(c = '#c0392b') { const g = new THREE.Group(); const b = box(0.3, 0.01, 0.14, c, { out: 0.005 }); g.add(b); const w = box(0.1, 0.012, 0.1, '#f1ede2', { out: 0 }); w.position.x = 0.07; g.add(w); return g; },
   kresek() { const g = new THREE.Group(); const b = mk(new THREE.SphereGeometry(0.42, 32, 20, 0, Math.PI * 2, 0, 1.7), '#f1ede2', { out: 'm' }); b.userData.mesh.material = toon('#f1ede2', { side: THREE.DoubleSide }); b.scale.set(1, 0.95, 1); g.add(b);
     for (const sx of [-1, 1]) { const e = mk(new THREE.TorusGeometry(0.07, 0.018, 8, 20), '#f1ede2', { out: 's' }); e.position.set(sx * 0.2, 0.42, 0); e.rotation.z = -sx * 0.4; g.add(e); } return g; },
   helmet(c = '#2a4fa0') { const g = new THREE.Group(); const h = mk(new THREE.SphereGeometry(0.4, 32, 20, 0, Math.PI * 2, 0, 1.5), c, { out: 'm' }); g.add(h); const v = mk(new THREE.SphereGeometry(0.405, 32, 10, Math.PI / 2 - 0.8, 1.6, 0.9, 0.5), '#d9e6ee', { out: false }); g.add(v); return g; },
@@ -799,6 +836,32 @@ function buildTeras() { // halaman depan rumah kampung kota: paving, pagar, tian
   const t1 = P.tree(1.2); t1.position.set(-3.6, 0, 2.4); g.add(t1);
   const sky = new THREE.Mesh(new THREE.PlaneGeometry(80, 40), new THREE.MeshBasicMaterial({ color: '#f0b07a', fog: false })); sky.position.set(0, 14, -14); sky.name = 'sky'; g.add(sky);
   g.userData = { sun: [7, 8, 7], sunTarget: [0, 0, -1], sunI: 3.0, hemi: 1.0, amb: 0.55, lamp: 0, bg: '#f0b07a', lampPos: [3.1, 3.9, 2.4] };
+  return g;
+}
+
+function buildParkiran() { // halaman parkir depan pasar: gedung pasar + plang + pintu masuk, garis parkir, pohon, gerobak
+  const g = new THREE.Group(); g.name = 'parkiran';
+  const at = canvasTex(512, 512, (x, w, h) => { x.fillStyle = '#6a6a70'; x.fillRect(0, 0, w, h); const r = rnd(23); for (let i = 0; i < 3000; i++) { x.fillStyle = `rgba(${r() < 0.5 ? 30 : 150},${r() < 0.5 ? 30 : 150},${r() < 0.5 ? 34 : 150},0.12)`; x.fillRect(r() * w, r() * h, 3, 3); } }, { repeat: [6, 6] });
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), toon('#ffffff', { map: at })); ground.rotation.x = -Math.PI / 2; ground.position.z = 4; ground.receiveShadow = true; g.add(ground);
+  // garis parkir (slot depan pintu = x 0)
+  for (let i = -4; i <= 4; i++) { const ln = box(0.07, 0.006, 2.6, '#f4f2e8', { out: 0 }); ln.position.set(i * 1.3 + 0.65, 0.005, 0.6); g.add(ln); }
+  const front = box(11.8, 0.006, 0.07, '#f4f2e8', { out: 0 }); front.position.set(0, 0.005, -0.7); g.add(front);
+  // gedung pasar
+  const wt = brickTex('#d8c49a'); wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(4, 1.5);
+  const bld = box(16, 5, 1, '#fff', { mat: toon('#ffffff', { map: wt }) }); bld.position.set(0, 2.5, -2.6); g.add(bld);
+  const door = box(2.4, 2.6, 0.1, '#2a2018'); door.position.set(0, 1.3, -2.06); g.add(door);
+  const canopy = box(3.4, 0.12, 1.4, '#c0392b'); canopy.position.set(0, 2.8, -1.5); canopy.rotation.x = 0.1; g.add(canopy);
+  const sign = P.sign(['PASAR', 'SENTOSA'], { bg: '#2e6f9e', fg: '#ffffff', w: 512, h: 256, font: '900 86px Poppins', gw: 3.0, gh: 1.1 }); sign.position.set(0, 3.9, -2.02); g.add(sign);
+  for (const sx of [-1, 1]) { const shop = box(3.2, 2.2, 0.1, sx < 0 ? '#3f8f4f' : '#d4a23a'); shop.position.set(sx * 4.2, 1.1, -2.05); g.add(shop);
+    const aw = canvasTex(256, 64, (x, w, h) => { for (let k = 0; k < 8; k++) { x.fillStyle = k % 2 ? '#f1ede2' : (sx < 0 ? '#2f7fbf' : '#d0402f'); x.fillRect(k * 32, 0, 32, h); } });
+    const awn = box(3.4, 0.08, 1.0, '#fff', { mat: toon('#ffffff', { map: aw }) }); awn.position.set(sx * 4.2, 2.5, -1.6); awn.rotation.x = 0.25; g.add(awn); }
+  for (const x of [-6.8, 6.8]) { const t = P.tree(1.3); t.position.set(x, 0, 1.8); g.add(t); }
+  // gerobak (tempat Pak Darmo ngintip)
+  const cart = new THREE.Group(); const cb = box(1.4, 0.8, 0.8, '#a4632a'); cb.position.y = 0.9; cart.add(cb); const roof = box(1.6, 0.06, 1.0, '#2f7fbf'); roof.position.y = 1.9; cart.add(roof);
+  for (const sx of [-1, 1]) { const p2 = cyl(0.03, 0.03, 1.0, '#5a3a20'); p2.position.set(sx * 0.7, 1.4, 0); cart.add(p2); const wh = cyl(0.25, 0.25, 0.06, '#2a2a30'); wh.rotation.z = Math.PI / 2; wh.position.set(sx * 0.72, 0.25, 0); cart.add(wh); }
+  cart.position.set(-4.6, 0, 2.6); g.add(cart);
+  const sky = new THREE.Mesh(new THREE.PlaneGeometry(90, 40), new THREE.MeshBasicMaterial({ color: '#f0b07a', fog: false })); sky.position.set(0, 14, -14); sky.name = 'sky'; g.add(sky);
+  g.userData = { sun: [7, 9, 8], sunTarget: [0, 0, 0], sunI: 3.0, hemi: 1.0, amb: 0.55, lamp: 0, bg: '#f0b07a', lampPos: [0, 3.2, -1.0] };
   return g;
 }
 
@@ -1208,7 +1271,7 @@ window.loadStory = async function (story) {
   if (STYLE3D) font3d = new FontLoader().parse(await (await fetch('/assets/poppins_800.typeface.json')).json());
   lights();
   if (STYLE3D) { setup3D(); makeParticles(); }
-  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.dapur = buildDapur(); sets.teras = buildTeras(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
+  sets.warung = buildWarung(); sets.street = buildStreet(); sets.bank = buildBank(); sets.halte = buildHalte(); sets.istana = buildIstana(); sets.taman = buildTaman(); sets.rumah = buildRumah(); sets.dapur = buildDapur(); sets.teras = buildTeras(); sets.parkiran = buildParkiran(); sets.kampung = buildKampung(); sets.pasar = buildPasar();
   sets.bank.position.set(0, 0, 60); sets.street.position.set(60, 0, 0);
   for (const k in sets) scene.add(sets[k]);
   // offset world agar set terpisah: shot memakai koordinat lokal set → kita geser kamera/aktor via parent
