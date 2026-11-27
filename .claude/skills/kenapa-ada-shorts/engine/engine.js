@@ -605,6 +605,11 @@ const P = {
     const seat = box(0.85, 0.05, 0.28, '#8a5a2a'); seat.position.y = 0.5; g.add(seat); const branch = cyl(0.06, 0.06, 1.6, '#5a3a20'); branch.rotation.z = Math.PI / 2; branch.position.y = 2.1; g.add(branch); return g; },
   lanternCN(c = '#d0302a') { const g = new THREE.Group(); const b = sph(0.2, c, { out: 's' }); b.scale.set(1, 0.85, 1); b.userData.mesh.material = STYLE3D ? new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.6, roughness: 0.5 }) : toon(c); g.add(b);
     for (const y of [-0.17, 0.17]) { const cp = cyl(0.08, 0.08, 0.04, '#f2c230', { out: false }); cp.position.y = y; g.add(cp); } const ts = cyl(0.01, 0.01, 0.18, '#f2c230', { out: false }); ts.position.y = -0.28; g.add(ts); return g; },
+  bakpao(n = 3) { const g = new THREE.Group(); const st = cyl(0.26, 0.24, 0.12, '#c89a5a'); st.position.y = 0.06; g.add(st);
+    const rim = mk(new THREE.TorusGeometry(0.255, 0.018, 8, 28), '#a87a3a', { out: false }); rim.rotation.x = Math.PI / 2; rim.position.y = 0.12; g.add(rim);
+    const pts = [[0, 0], [-0.1, 0.07], [0.1, 0.07], [-0.06, -0.09], [0.08, -0.08]].slice(0, n);
+    for (const [x, z] of pts) { const b = sph(0.075, '#fbf4e6', { out: 's' }); b.scale.set(1, 0.72, 1); b.position.set(x, 0.17, z); g.add(b); const d = sph(0.012, '#d0302a', { out: false }); d.position.set(x, 0.225, z); g.add(d); }
+    return g; },
   scroll() { const g = new THREE.Group(); const p2 = box(0.5, 0.005, 0.32, '#f2e6c4', { out: 0.005 }); g.add(p2); for (const sx of [-1, 1]) { const r = cyl(0.025, 0.025, 0.36, '#d0302a', { out: 's' }); r.rotation.x = Math.PI / 2; r.position.x = sx * 0.26; g.add(r); } return g; },
   curtainCN(open = false) { const g = new THREE.Group(); const t = canvasTex(256, 512, (x, w, h) => { const gr = x.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#8a1a1a'); gr.addColorStop(0.5, '#c0302a'); gr.addColorStop(1, '#8a1a1a'); x.fillStyle = gr; x.fillRect(0, 0, w, h);
       x.strokeStyle = 'rgba(0,0,0,0.25)'; x.lineWidth = 6; for (let i = 0; i < 10; i++) { x.beginPath(); x.moveTo(i * 26, 0); x.lineTo(i * 26 + 6, h); x.stroke(); } x.fillStyle = '#f2c230'; x.fillRect(0, 0, w, 24); });
