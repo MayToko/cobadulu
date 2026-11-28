@@ -13,7 +13,19 @@ python3 "$BUILD" words.json story.json
 if [ "$FINISH" = "hyperframes" ]; then
   python3 -c "import json;p='story.json';s=json.load(open(p));s['finish']='hyperframes';json.dump(s,open(p,'w'),indent=1)"
 fi
-node "$D/render.js" story.json video_silent.mp4
+# render per potongan (CHUNK detik) → bisa dilanjutkan kalau proses/kontainer terhenti: potongan yang sudah selesai tidak dirender ulang
+CHUNK="${CHUNK:-15}"
+TOTAL=$(python3 -c "import json;print(sum(x['dur'] for x in json.load(open('story.json'))['shots']))")
+mkdir -p segs; [ -f segs/.story ] && cmp -s segs/.story story.json || { rm -f segs/*.mp4; cp story.json segs/.story; }
+python3 -c "
+import math;T=$TOTAL;C=$CHUNK
+for i in range(math.ceil(T/C)): print(i, round(i*C,4), round(min(T,(i+1)*C),4))" | while read i a b; do
+  f=$(printf "segs/seg_%03d.mp4" "$i"); [ -s "$f" ] && continue
+  node "$D/render.js" story.json "segs/tmp.mp4" --from "$a" --to "$b" && mv segs/tmp.mp4 "$f"
+done
+NS=$(python3 -c "import math;print(math.ceil($TOTAL/$CHUNK))"); [ "$(ls segs/seg_*.mp4 | wc -l)" -eq "$NS" ] || { echo "render belum lengkap — jalankan ulang make_video.sh untuk melanjutkan"; exit 1; }
+ls segs/seg_*.mp4 | sed "s|^|file '$W/|; s|$|'|" > segs/list.txt
+ffmpeg -v error -y -f concat -safe 0 -i segs/list.txt -c copy video_silent.mp4
 python3 "$D/audio.py" vo_raw.mp3 story.json mix.wav --tempo "$TEMPO"
 if [ "$FINISH" = "hyperframes" ]; then
   rm -rf hf && python3 "$D/hf_compose.py" story.json video_silent.mp4 mix.wav hf
