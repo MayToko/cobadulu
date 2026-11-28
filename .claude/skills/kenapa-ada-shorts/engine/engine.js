@@ -610,6 +610,24 @@ const P = {
     const pts = [[0, 0], [-0.1, 0.07], [0.1, 0.07], [-0.06, -0.09], [0.08, -0.08]].slice(0, n);
     for (const [x, z] of pts) { const b = sph(0.075, '#fbf4e6', { out: 's' }); b.scale.set(1, 0.72, 1); b.position.set(x, 0.17, z); g.add(b); const d = sph(0.012, '#d0302a', { out: false }); d.position.set(x, 0.225, z); g.add(d); }
     return g; },
+  flagCN(c = '#d0302a', h = 2.4) { const g = new THREE.Group(); const pole = cyl(0.025, 0.03, h, '#5a3a20', { out: 's' }); pole.position.y = h / 2; g.add(pole);
+    const tip = sph(0.05, '#f2c230', { out: false }); tip.position.y = h + 0.03; g.add(tip);
+    const fl = new THREE.Group(); fl.position.set(0.03, h - 0.08, 0); g.add(fl); g.userData.flag = fl;
+    const ban = box(0.8, 0.55, 0.02, c, { out: 0.006 }); ban.position.set(0.4, -0.28, 0); fl.add(ban);
+    const em = cyl(0.13, 0.13, 0.03, '#f2c230', { out: false }); em.rotation.x = Math.PI / 2; em.position.set(0.4, -0.28, 0.012); fl.add(em);
+    g.userData.update = (t) => { fl.rotation.y = Math.sin(t * 3.1) * 0.25; }; return g; },
+  broom() { const g = new THREE.Group(); const st = cyl(0.018, 0.018, 1.3, '#a87a3a', { out: 's' }); st.position.y = 0.75; g.add(st);
+    const br = mk(new THREE.ConeGeometry(0.16, 0.3, 16), '#d8b860', { out: 's' }); br.position.y = 0.12; g.add(br); return g; },
+  army(rows = 8, cols = 16, c = '#3a2a3a', gap = 0.9) { const g = new THREE.Group(); const n = rows * cols; const r = rnd(11);
+    const parts = [[new THREE.CylinderGeometry(0.2, 0.26, 0.9, 10), c, 0.75], [new THREE.SphereGeometry(0.22, 12, 8), '#f1e2c4', 1.4], [new THREE.ConeGeometry(0.26, 0.32, 10), '#5a2a2a', 1.66]];
+    const off = []; for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++) off.push([(j - (cols - 1) / 2) * gap + (r() - 0.5) * 0.2, -i * gap * 1.1 + (r() - 0.5) * 0.2]);
+    const m4 = new THREE.Matrix4();
+    for (const [geo, col, y] of parts) { const im = new THREE.InstancedMesh(geo, toon(col), n); im.castShadow = true; im.receiveShadow = true;
+      off.forEach(([x, z], k) => { m4.makeTranslation(x, y, z); im.setMatrixAt(k, m4); }); g.add(im); }
+    const sp = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.015, 0.015, 2.2, 5), toon('#7a4a24'), n);
+    off.forEach(([x, z], k) => { m4.makeTranslation(x + 0.3, 1.1, z); sp.setMatrixAt(k, m4); }); g.add(sp);
+    for (let i = 0; i < 6; i++) { const f = P.flagCN('#2a2a3a', 3.4); f.position.set((i - 2.5) * cols * gap / 6, 0, -r() * rows * gap); g.add(f); }
+    g.userData.update = (t) => g.children.forEach(ch => ch.userData.update && ch.userData.update(t + ch.position.x)); return g; },
   scroll() { const g = new THREE.Group(); const p2 = box(0.5, 0.005, 0.32, '#f2e6c4', { out: 0.005 }); g.add(p2); for (const sx of [-1, 1]) { const r = cyl(0.025, 0.025, 0.36, '#d0302a', { out: 's' }); r.rotation.x = Math.PI / 2; r.position.x = sx * 0.26; g.add(r); } return g; },
   curtainCN(open = false) { const g = new THREE.Group(); const t = canvasTex(256, 512, (x, w, h) => { const gr = x.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#8a1a1a'); gr.addColorStop(0.5, '#c0302a'); gr.addColorStop(1, '#8a1a1a'); x.fillStyle = gr; x.fillRect(0, 0, w, h);
       x.strokeStyle = 'rgba(0,0,0,0.25)'; x.lineWidth = 6; for (let i = 0; i < 10; i++) { x.beginPath(); x.moveTo(i * 26, 0); x.lineTo(i * 26 + 6, h); x.stroke(); } x.fillStyle = '#f2c230'; x.fillRect(0, 0, w, 24); });
@@ -972,10 +990,15 @@ function buildTembok() { // tembok kota bergerigi + gerbang + obor (adegan seran
   for (const sx of [-1, 1]) { const w = box(9, 4.5, 1.4, '#fff', { mat: toon('#ffffff', { map: wt }) }); w.position.set(sx * 6.2, 2.25, -2); g.add(w);
     for (let i = 0; i < 9; i++) { const m = box(0.5, 0.5, 1.4, '#8a8070'); m.position.set(sx * 6.2 - 4.2 + i * 1.05, 4.75, -2); g.add(m); } }
   const gh = box(3.4, 1.2, 1.6, '#fff', { mat: toon('#ffffff', { map: wt }) }); gh.position.set(0, 3.9, -2); g.add(gh);
-  const door = box(3.0, 3.3, 0.2, '#5a2a14'); door.position.set(0, 1.65, -1.6); g.add(door);
+  const door = box(3.0, 3.3, 0.2, '#5a2a14'); door.position.set(0, 1.65, -1.6); door.name = 'gateClosed'; g.add(door);
+  const leaves = new THREE.Group(); leaves.name = 'gateOpen'; leaves.visible = false; g.add(leaves);   // shot.gate = 'open' → gerbang terbuka lebar
+  for (const sx of [-1, 1]) { const lf = box(1.5, 3.3, 0.16, '#5a2a14'); lf.position.set(sx * 1.5 + sx * 0.08, 1.65, -1.6 + 0.75); lf.rotation.y = sx * Math.PI / 2; leaves.add(lf); }
+  const tun = box(3.0, 3.3, 0.05, '#2a1a10'); tun.position.set(0, 1.65, -2.75); tun.visible = false; tun.name = 'gateDark'; g.add(tun);
   for (let k = 0; k < 4; k++) for (let j = 0; j < 4; j++) { const st2 = sph(0.05, '#f2c230', { out: false }); st2.position.set(-1.1 + k * 0.73, 0.6 + j * 0.75, -1.45); g.add(st2); }
   const tw = new THREE.Group(); const twb = box(3.8, 1.4, 2.0, '#a83228'); twb.position.y = 0.7; tw.add(twb); const twr = cnRoof(4.6, 2.8); twr.position.y = 1.75; tw.add(twr); tw.position.set(0, 4.5, -2); g.add(tw);
   for (const sx of [-1, 1]) { const t = P.torch(); t.position.set(sx * 2.0, 0, -1.2); g.add(t); }
+  const bal = box(3.8, 0.16, 1.5, '#8a8070'); bal.position.set(0, 4.42, -0.55); g.add(bal);   // balkon gerbang (tempat berdiri di atas tembok, y=4.5)
+  for (const sx of [-1, 1]) { const rl = box(0.08, 0.35, 1.5, '#a83228'); rl.position.set(sx * 1.86, 4.67, -0.55); g.add(rl); }
   const sky = new THREE.Mesh(new THREE.PlaneGeometry(90, 45), new THREE.MeshBasicMaterial({ color: '#f0b07a', fog: false })); sky.position.set(0, 16, -30); sky.name = 'sky'; g.add(sky);
   g.userData = { sun: [6, 9, 8], sunTarget: [0, 0, 0], sunI: 3.0, hemi: 1.0, amb: 0.55, lamp: 0, bg: '#f0b07a', lampPos: [0, 3.0, 1.0] };
   return g;
@@ -1315,6 +1338,10 @@ let STORY = null; let curSet = null; let CUR_T = 0; const IMG = {};
 const ease = { io: (t) => 0.5 - 0.5 * Math.cos(Math.PI * t), o: (t) => 1 - Math.pow(1 - t, 3), i: (t) => t * t * t, l: (t) => t };
 const lerp3 = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
 
+function setGate(s) {   // gerbang tembok: s.gate = 'open' | 'closed' (default)
+  const t = sets.tembok; if (!t) return; const open = s.gate === 'open';
+  const c = t.getObjectByName('gateClosed'), o = t.getObjectByName('gateOpen'); if (c) c.visible = !open; if (o) o.visible = open;
+}
 function useSet(name) {
   if (curSet === name) return; curSet = name;
   for (const k in sets) sets[k].visible = k === name;
@@ -1394,6 +1421,7 @@ window.renderAt = function (T) {
   camera.fov = c.fov2 ? c.fov + (c.fov2 - c.fov) * k : (c.fov || 35); camera.updateProjectionMatrix();
   if (c.roll) camera.rotation.z += c.roll;
   // suasana → cahaya, langit, kabut, lampu, grading
+  setGate(s);
   const md = applyMood(s, sets[s.set], tg);
   postMat.uniforms.time.value = T;
   if (STYLE3D) {
