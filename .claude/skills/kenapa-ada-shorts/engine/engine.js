@@ -990,11 +990,16 @@ function buildTembok() { // tembok kota bergerigi + gerbang + obor (adegan seran
   for (const sx of [-1, 1]) { const w = box(9, 4.5, 1.4, '#fff', { mat: toon('#ffffff', { map: wt }) }); w.position.set(sx * 6.2, 2.25, -2); g.add(w);
     for (let i = 0; i < 9; i++) { const m = box(0.5, 0.5, 1.4, '#8a8070'); m.position.set(sx * 6.2 - 4.2 + i * 1.05, 4.75, -2); g.add(m); } }
   const gh = box(3.4, 1.2, 1.6, '#fff', { mat: toon('#ffffff', { map: wt }) }); gh.position.set(0, 3.9, -2); g.add(gh);
-  const door = box(3.0, 3.3, 0.2, '#5a2a14'); door.position.set(0, 1.65, -1.6); door.name = 'gateClosed'; g.add(door);
+  const doorG = new THREE.Group(); doorG.name = 'gateClosed'; g.add(doorG);
+  const door = box(3.0, 3.3, 0.2, '#5a2a14'); door.position.set(0, 1.65, -1.6); doorG.add(door);
   const leaves = new THREE.Group(); leaves.name = 'gateOpen'; leaves.visible = false; g.add(leaves);   // shot.gate = 'open' → gerbang terbuka lebar
   for (const sx of [-1, 1]) { const lf = box(1.5, 3.3, 0.16, '#5a2a14'); lf.position.set(sx * 1.5 + sx * 0.08, 1.65, -1.6 + 0.75); lf.rotation.y = sx * Math.PI / 2; leaves.add(lf); }
   const tun = box(3.0, 3.3, 0.05, '#2a1a10'); tun.position.set(0, 1.65, -2.75); tun.visible = false; tun.name = 'gateDark'; g.add(tun);
-  for (let k = 0; k < 4; k++) for (let j = 0; j < 4; j++) { const st2 = sph(0.05, '#f2c230', { out: false }); st2.position.set(-1.1 + k * 0.73, 0.6 + j * 0.75, -1.45); g.add(st2); }
+  for (let k = 0; k < 4; k++) for (let j = 0; j < 4; j++) { const st2 = sph(0.05, '#f2c230', { out: false }); st2.position.set(-1.1 + k * 0.73, 0.6 + j * 0.75, -1.45); doorG.add(st2); }
+  for (const sx of [-1, 1]) for (let i = 0; i < 3; i++) {   // rumah-rumah kota di balik tembok (terlihat lewat gerbang terbuka)
+    const hs = new THREE.Group(); const hb = box(2.4, 2.2, 2.2, '#a83228'); hb.position.y = 1.1; hs.add(hb); const hr = cnRoof(3.0, 2.8); hr.position.y = 2.2; hs.add(hr);
+    hs.position.set(sx * 2.9, 0, -5.5 - i * 3.0); hs.rotation.y = sx * Math.PI / 2; g.add(hs);
+    const ln = P.lanternCN('#d0302a'); ln.position.set(sx * 1.6, 2.4, -5.5 - i * 3.0); g.add(ln); }
   const tw = new THREE.Group(); const twb = box(3.8, 1.4, 2.0, '#a83228'); twb.position.y = 0.7; tw.add(twb); const twr = cnRoof(4.6, 2.8); twr.position.y = 1.75; tw.add(twr); tw.position.set(0, 4.5, -2); g.add(tw);
   for (const sx of [-1, 1]) { const t = P.torch(); t.position.set(sx * 2.0, 0, -1.2); g.add(t); }
   const bal = box(3.8, 0.16, 1.5, '#8a8070'); bal.position.set(0, 4.42, -0.55); g.add(bal);   // balkon gerbang (tempat berdiri di atas tembok, y=4.5)
